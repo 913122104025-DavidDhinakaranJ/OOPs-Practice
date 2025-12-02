@@ -22,6 +22,7 @@ class CloudFileUploader implements FileUploader{
         System.out.println("File saved in cloud.");
     }
     
+    //These complex implementations are hidden with abstraction.
     private void validate(String path) {
         // Validates the file by checking its size, type etc
     }

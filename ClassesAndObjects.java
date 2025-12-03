@@ -1,20 +1,36 @@
 public class ClassesAndObjects {
     public static void main(String args[]) {
-        //Creating objects for Application Form
-        ApplicationForm af1 = new ApplicationForm();
-        af1.name = "David";
-        af1.age = 20;
-        af1.display();
+        //Creating objects(cars) using Class(car template)
+        Car myCar = new Car();
+        
+        myCar.color = "blue";
+        myCar.model = "BMW";
+        myCar.manufacturingYear = 2024;
+        
+        myCar.start();
+        myCar.accelerate();
+        myCar.applyBrake();
     }
 }
 
-//Class(Template) for Application Form
-class ApplicationForm {
-    String name;
-    int age;
+//Class(Template) for Car
+class Car {
+    String color;
+    String model;
+    int manufacturingYear;
     
-    void display() {
-        System.out.println(name);
-        System.out.println(age);
+    void start() {
+        //logic for starting a car
+        System.out.println("Car Starts.");
+    }
+    
+    void accelerate() {
+        //logic for accelerating a car
+        System.out.println("Accelerates Car.");
+    }
+    
+    void applyBrake() {
+        //logic for stopping a car
+        System.out.println("Brake applied to Car.");
     }
 }

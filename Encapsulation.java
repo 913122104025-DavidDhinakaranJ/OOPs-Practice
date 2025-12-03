@@ -1,33 +1,49 @@
 public class Encapsulation {
     public static void main(String args[]) {
-        BankAccount acc1 = new BankAccount();
-        //acc1.balance += 1000;      This line throws an error as direct access to the 'balance' field from outside of the class BankAccount is not allowed.
+        LaptopBag bag = new LaptopBag();
         
-        //We can access the field 'balance' using the methods provided by that class
-        acc1.deposit(1000);     
-        acc1.withdraw(500);
-        System.out.println(acc1.getBalance());
+        Object laptop = bag.takeLaptop();
+        Object charger = bag.takeCharger();
+        Object mouse = bag.takeMouse();
+        
+        bag.keepLaptop(laptop);
+        bag.keepCharger(charger);
+        bag.keepMouse(mouse);
     }
 }
 
-//Encapsulation
-//Here field 'balance' is encapsuled so that it cannot be directly accesssed or modified by other classes
-class BankAccount {
-    private int balance = 0;
-    
-    public void deposit(int amount) {
-        balance += amount;
+class LaptopBag {
+    private Object laptop = new Object();
+    private Object charger = new Object();
+    private Object mouse = new Object();
+
+    public Object takeLaptop() {
+        Object item = laptop;
+        laptop = null;
+        return item;
     }
-    
-    public boolean withdraw(int amount) {
-        if(balance >= amount) {
-            balance -= amount;
-            return true;
-        }
-        return false;
+
+    public void keepLaptop(Object laptop) {
+        this.laptop = laptop;
     }
-    
-    public int getBalance() {
-        return balance;
+
+    public Object takeCharger() {
+        Object item = charger;
+        charger = null;
+        return item;
+    }
+
+    public void keepCharger(Object charger) {
+        this.charger = charger;
+    }
+
+    public Object takeMouse() {
+        Object item = mouse;
+        mouse = null;
+        return item;
+    }
+
+    public void keepMouse(Object mouse) {
+        this.mouse = mouse;
     }
 }

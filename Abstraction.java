@@ -1,49 +1,53 @@
 public class Abstraction {
     public static void main(String args[]) {
-        FileUploader uploader = new CloudFileUploader();
-        uploader.upload("myPhoto.jpg");
+        WashingMachine washer = new BrandedWashingMachine();
+        
+        washer.selectMode("Quick Wash");
+        washer.start();
+        washer.stop();
     }
 }
 
-interface FileUploader {
-    void upload(String path);
+interface WashingMachine {
+    void start();
+    void stop();
+    void selectMode(String mode);
 }
 
-class CloudFileUploader implements FileUploader{
+class BrandedWashingMachine implements WashingMachine{
+    private String mode = "Default";
+    
+    @Override
+    public void start() {
+        System.out.println("Washing Machine Started.");
+        //The below operations are done based on mode selected.
+        fillWater();
+        rotateDrum();
+        drainWater();
+    }
 
     @Override
-    public void upload(String path) {
-        validate(path);
-        compress(path);
-        encrypt(path);
-        connectToServer();
-        sendFile(path);
-        disconnect();
-        System.out.println("File saved in cloud.");
+    public void stop() {
+        System.out.println("Washing Machine Stopped.");
+        //logic for stopping washing machine.
+    }
+
+    @Override
+    public void selectMode(String mode) {
+        this.mode = mode;
+        System.out.println(mode + " is selected.");
     }
     
     //These complex implementations are hidden with abstraction.
-    private void validate(String path) {
-        // Validates the file by checking its size, type etc
+    private void fillWater() {
+        //logic for filling water in a washing machine.
     }
-
-    private void compress(String path) {
-        // compression algorithm for compressing the file to desired size
+    
+    private void rotateDrum() {
+        //logic for rotating drum in washing machine.
     }
-
-    private void encrypt(String path) {
-        // encrypts the file before sending it to server
-    }
-
-    private void connectToServer() {
-        // creates a connection to the server
-    }
-
-    private void sendFile(String path) {
-        // sends file to the server
-    }
-
-    private void disconnect() {
-        // closes the connection created with the server
+    
+    private void drainWater() {
+        //logic for draining water from washing machine.
     }
 }

@@ -2,9 +2,9 @@ public class Encapsulation {
     public static void main(String args[]) {
         LaptopBag bag = new LaptopBag();
         
-        Object laptop = bag.takeLaptop();
-        Object charger = bag.takeCharger();
-        Object mouse = bag.takeMouse();
+        Laptop laptop = bag.takeLaptop();
+        Charger charger = bag.takeCharger();
+        Mouse mouse = bag.takeMouse();
         
         bag.keepLaptop(laptop);
         bag.keepCharger(charger);
@@ -13,37 +13,43 @@ public class Encapsulation {
 }
 
 class LaptopBag {
-    private Object laptop = new Object();
-    private Object charger = new Object();
-    private Object mouse = new Object();
+    private Laptop laptop = new Laptop();
+    private Charger charger = new Charger();
+    private Mouse mouse = new Mouse();
 
-    public Object takeLaptop() {
-        Object item = laptop;
+    public Laptop takeLaptop() {
+        Laptop item = laptop;
         laptop = null;
         return item;
     }
 
-    public void keepLaptop(Object laptop) {
+    public void keepLaptop(Laptop laptop) {
         this.laptop = laptop;
     }
 
-    public Object takeCharger() {
-        Object item = charger;
+    public Charger takeCharger() {
+        Charger item = charger;
         charger = null;
         return item;
     }
 
-    public void keepCharger(Object charger) {
+    public void keepCharger(Charger charger) {
         this.charger = charger;
     }
 
-    public Object takeMouse() {
-        Object item = mouse;
+    public Mouse takeMouse() {
+        Mouse item = mouse;
         mouse = null;
         return item;
     }
 
-    public void keepMouse(Object mouse) {
+    public void keepMouse(Mouse mouse) {
         this.mouse = mouse;
     }
 }
+
+class Laptop {}
+
+class Charger {}
+
+class Mouse {}

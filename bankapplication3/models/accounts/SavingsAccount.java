@@ -1,0 +1,25 @@
+package com.mycompany.bankapplication3.models.accounts;
+
+import com.mycompany.bankapplication3.enums.AccountType;
+
+public class SavingsAccount extends BankAccount {
+    private static final double MINIMUM_BALANCE = 100;
+    
+    public SavingsAccount(double initialAmount, String customerId) {
+        super(initialAmount, customerId);
+    }
+    
+    @Override
+    public boolean deduct(double amount) {
+        if(balance - amount >= MINIMUM_BALANCE) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public AccountType getAccountType() {
+        return AccountType.SAVINGS;
+    }
+}

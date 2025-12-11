@@ -113,14 +113,13 @@ public class NetBankingController {
     }
 
     private void transferFund(User user) {
-        String[] accountsForTransfer = netBankingView.getAccountNumbersForTransferFund();
-        String from = accountsForTransfer[0];
-        String to = accountsForTransfer[1];
+        String from = netBankingView.getSenderAccountNumber();
         
         if(!user.hasAccount(from)) {
             netBankingView.displayError("The account '" + from + "' is not associated with you.");
             return;
         }
+        String to = netBankingView.getReceiverAccountNumber();
         
         BankAccount fromAccount = accounts.findAccount(from);
         BankAccount toAccount = accounts.findAccount(to);

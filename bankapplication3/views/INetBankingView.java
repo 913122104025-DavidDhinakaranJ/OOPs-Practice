@@ -14,9 +14,11 @@ public interface INetBankingView extends IMessageView {
     String getAccountNumber();
     String getCardNumber();
     int getPin();
-    String[] getAccountNumbersForTransferFund();
     
     double getInitialDepositAmount();
+    
+    String getSenderAccountNumber();
+    String getReceiverAccountNumber();
     double getTransferFundAmount();
     
     void displayAccountList(List<BankAccount> accounts);

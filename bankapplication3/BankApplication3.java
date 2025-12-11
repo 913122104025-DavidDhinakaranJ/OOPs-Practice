@@ -7,7 +7,10 @@ import com.mycompany.bankapplication3.repositories.IAccountRepository;
 import com.mycompany.bankapplication3.repositories.ICardRepository;
 import com.mycompany.bankapplication3.repositories.IUserRepository;
 import com.mycompany.bankapplication3.repositories.InMemoryRepository;
-import com.mycompany.bankapplication3.views.ConsoleBankView;
+import com.mycompany.bankapplication3.views.ConsoleATMView;
+import com.mycompany.bankapplication3.views.ConsoleAuthView;
+import com.mycompany.bankapplication3.views.ConsoleMainView;
+import com.mycompany.bankapplication3.views.ConsoleNetBankingView;
 import com.mycompany.bankapplication3.views.IATMView;
 import com.mycompany.bankapplication3.views.IAuthView;
 import com.mycompany.bankapplication3.views.IMainView;
@@ -21,12 +24,10 @@ public class BankApplication3 {
         IAccountRepository accounts = inMemoryRepository;
         ICardRepository cards = inMemoryRepository;
         
-        ConsoleBankView bankView = new ConsoleBankView();
-        
-        IMainView mainView = bankView;
-        IAuthView authView = bankView;
-        INetBankingView netBankingView = bankView;
-        IATMView atmView = bankView;
+        IMainView mainView = new ConsoleMainView();
+        IAuthView authView = new ConsoleAuthView();
+        INetBankingView netBankingView = new ConsoleNetBankingView();
+        IATMView atmView = new ConsoleATMView();
         
         ATMController atmController = new ATMController(atmView, cards);
         NetBankingController netBankingController = new NetBankingController(netBankingView, accounts, cards);

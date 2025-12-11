@@ -15,14 +15,13 @@ public class AuthController {
     }
     
     public void handleRegistration() {
-        String[] credentials = authView.getRegistrationDetails();
-        String username = credentials[0];
-        String password = credentials[1];
+        String username = authView.getUsername();
         
         if(users.isUsernameTaken(username)) {
             authView.displayError("Username " + username + " has already taken");
             return;
         }
+        String password = authView.getPassword();
         
         User newUser = new User(username, password);
         users.saveUser(newUser);
@@ -31,9 +30,8 @@ public class AuthController {
     }
     
     public User handleLogin() {
-        String[] credentials = authView.getRegistrationDetails();
-        String username = credentials[0];
-        String password = credentials[1];
+        String username = authView.getUsername();
+        String password = authView.getPassword();
         
         User user = users.findUser(username);
         if(user == null) {

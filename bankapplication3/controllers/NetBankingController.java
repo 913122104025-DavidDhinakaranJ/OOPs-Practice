@@ -1,0 +1,142 @@
+package com.mycompany.bankapplication3.controllers;
+
+import com.mycompany.bankapplication3.enums.AccountType;
+import com.mycompany.bankapplication3.enums.CardType;
+import com.mycompany.bankapplication3.enums.NetBankingOption;
+import com.mycompany.bankapplication3.models.User;
+import com.mycompany.bankapplication3.models.accounts.BankAccount;
+import com.mycompany.bankapplication3.models.accounts.CurrentAccount;
+import com.mycompany.bankapplication3.models.accounts.SavingsAccount;
+import com.mycompany.bankapplication3.models.cards.CreditCard;
+import com.mycompany.bankapplication3.models.cards.DebitCard;
+import com.mycompany.bankapplication3.repositories.IAccountRepository;
+import com.mycompany.bankapplication3.repositories.ICardRepository;
+import com.mycompany.bankapplication3.views.INetBankingView;
+import java.util.ArrayList;
+import java.util.List;
+
+public class NetBankingController {
+    private final INetBankingView netBankingView;
+    private final IAccountRepository accounts;
+    private final ICardRepository cards;
+
+    public NetBankingController(INetBankingView netBankingView, IAccountRepository accounts, ICardRepository cards) {
+        this.netBankingView = netBankingView;
+        this.accounts = accounts;
+        this.cards = cards;
+    }
+
+    public void runNetBanking(User user) {
+        boolean login = true;
+        while(login) {
+            NetBankingOption choice = netBankingView.getNetBankingMenuChoice();
+            
+            switch(choice) {
+                case LIST_ACCOUNTS -> displayAccounts(user);
+                case CREATE_ACCOUNT -> createAccount(user);
+                case ISSUE_CARD -> issueCard(user);
+                case TRANSFER_FUND -> transferFund(user);
+                case LOGOUT -> login = false;
+                default -> netBankingView.displayError("Invalid Choice.");
+                
+            }
+        }
+    }
+    
+    private void displayAccounts(User user) {
+        List<BankAccount> userAccounts = new ArrayList<>();
+        for(String accNo : user.getAccountNumbers()) {
+            userAccounts.add(accounts.findAccount(accNo));
+        }
+        
+        netBankingView.displayAccountList(userAccounts);
+    }
+    
+    private void createAccount(User user) {
+        AccountType type = netBankingView.getAccountType();
+        
+        switch(type) {
+            case SAVINGS -> createSavingsAccount(user);
+            case CURRENT -> createCurrentAccount(user);
+            default -> netBankingView.displayError("Invalid Account Choice.");
+        }
+    }
+    
+    private void createSavingsAccount(User user) {
+        double initialAmount = netBankingView.getInitialDepositAmount();
+        SavingsAccount account = new SavingsAccount(initialAmount, user.getUserId());
+        accounts.saveAccount(account);
+        user.addAccount(account.getAccNo());
+        
+        netBankingView.displayMessage("Savings account with account number \"" + account.getAccNo() + "\" is created.");
+    }
+    
+    private void createCurrentAccount(User user) {
+        double initialAmount = netBankingView.getInitialDepositAmount();
+        CurrentAccount account = new CurrentAccount(initialAmount, user.getUserId());
+        accounts.saveAccount(account);
+        user.addAccount(account.getAccNo());
+        
+        netBankingView.displayMessage("Current account with account number \"" + account.getAccNo() + "\" is created.");
+    }
+
+    private void issueCard(User user) {
+        CardType type = netBankingView.getCardType();
+            
+        switch(type) {
+            case CREDIT -> issueCreditCard(user);
+            case DEBIT -> issueDebitCard(user);
+            default -> netBankingView.displayError("Invalid Card Choice.");
+        }
+    }
+
+    private void issueCreditCard(User user) {
+        int pin = netBankingView.getPin();
+        
+        CreditCard card = new CreditCard(pin, user);
+        cards.saveCard(card);
+        netBankingView.displayMessage("\"" + card.getCardNo() + "\" is your Credit Card number.");
+    }
+
+    private void issueDebitCard(User user) {
+        String accNo = netBankingView.getAccountNumber();
+        
+        if(user.hasAccount(accNo)) {
+            BankAccount account = accounts.findAccount(accNo);
+            int pin = netBankingView.getPin();
+            DebitCard card = new DebitCard(account, pin);
+            cards.saveCard(card);
+            netBankingView.displayMessage("\"" + card.getCardNo() + "\" is your Debit Card number.");
+        } else {
+            netBankingView.displayError("This account is not associated with you.");
+        }
+    }
+
+    private void transferFund(User user) {
+        String[] accountsForTransfer = netBankingView.getAccountNumbersForTransferFund();
+        String from = accountsForTransfer[0];
+        String to = accountsForTransfer[1];
+        
+        if(!user.hasAccount(from)) {
+            netBankingView.displayError("The account '" + from + "' is not associated with you.");
+            return;
+        }
+        
+        BankAccount fromAccount = accounts.findAccount(from);
+        BankAccount toAccount = accounts.findAccount(to);
+        
+        if(toAccount == null) {
+            netBankingView.displayError("The account '" + to + "' does not exist.");
+            return;
+        }
+        
+        double transferAmount = netBankingView.getTransferFundAmount();
+        
+        if(fromAccount.deduct(transferAmount)) {
+            toAccount.deposit(transferAmount);
+            netBankingView.displayMessage("Transfer Successfully completed.");
+        } else {
+            netBankingView.displayError("Insufficient amount to transfer.");
+        }
+    }
+}

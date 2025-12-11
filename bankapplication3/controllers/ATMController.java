@@ -1,0 +1,105 @@
+package com.mycompany.bankapplication3.controllers;
+import com.mycompany.bankapplication3.enums.ATMOption;
+import com.mycompany.bankapplication3.models.cards.Card;
+import com.mycompany.bankapplication3.repositories.ICardRepository;
+import com.mycompany.bankapplication3.views.IATMView;
+
+public class ATMController {
+    
+    private final IATMView atmView;
+    private final ICardRepository cards;
+
+    public ATMController(IATMView atmView, ICardRepository cards) {
+        this.atmView = atmView;
+        this.cards = cards;
+    }
+
+    public void runATM() {
+        boolean runningATM = true;
+        
+        while(runningATM) {
+            ATMOption choice = atmView.getCardMenuChoice();
+            
+            if(choice == ATMOption.EXIT) {
+                runningATM = false;
+                continue;
+            }
+            
+            String cardNo = atmView.getCardNumber();
+            Card card = cards.findCard(cardNo);
+            if(card == null) {
+                atmView.displayError("Invalid Card Number.");
+                continue;
+            }
+            int pin = atmView.getPin();
+            if(!card.validatePin(pin)) {
+                atmView.displayError("Incorrect PIN.");
+                continue;
+            }
+            
+            switch(choice) {
+                case DEPOSIT -> handleDeposit(card);
+                case WITHDRAW -> handleWithdraw(card);
+                case SWIPE -> handleSwipe(card);
+                default -> atmView.displayError("Invalid Choice");
+                
+            }
+        }
+    }
+
+    private void handleDeposit(Card card) {
+        double amount = atmView.getDepositAmount();
+        
+        card.pay(amount);
+        atmView.displayBalance(card.getBalance());
+    }
+
+    private void handleWithdraw(Card card) {
+        double amount = atmView.getWithdrawAmount();
+        if(!isMultipleOf5(amount)) {
+            atmView.displayError("Withdrawl amount must be multiple of 5.");
+            return;
+        }
+        
+        double transactionCharge = calculateTransactionCharge(amount);
+        double totalDeduction = amount + transactionCharge;
+        
+        if(card.use(totalDeduction)) {
+            atmView.displayTransactionCharge(transactionCharge);
+            atmView.displayBalance(card.getBalance());
+        } else {
+            atmView.displayError("Insufficient amount to withdraw.");
+        }
+    }
+
+    private void handleSwipe(Card card) {
+        double amount = atmView.getWithdrawAmount();
+        
+        double cashback = calculateCashBack(amount);
+        double totalDeduction = amount - cashback;
+        
+        if(card.use(totalDeduction)) {
+            atmView.displayCashback(cashback);
+            atmView.displayBalance(card.getBalance());
+        } else {
+            atmView.displayError("Insufficient amount to pay.");
+        }
+    }
+    
+    private boolean isMultipleOf5(double amount) {
+        return amount % 5 == 0;
+    }
+    
+    private double calculateTransactionCharge(double amount) {
+        if(amount <= 100) {
+            return amount * 0.02;
+        }
+        else {
+            return amount * 0.04;
+        }
+    }
+    
+    private double calculateCashBack(double amount) {
+        return amount * 0.01;
+    }
+}

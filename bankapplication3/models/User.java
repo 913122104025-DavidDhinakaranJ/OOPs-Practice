@@ -31,7 +31,11 @@ public class User {
     }
     
     public void addAccount(String accNo) {
-        this.getAccountNumbers().add(accNo);
+        accountNumbers.add(accNo);
+    }
+    
+    public boolean hasAccount(String accNo) {
+        return accountNumbers.contains(accNo);
     }
 
     public List<String> getAccountNumbers() {

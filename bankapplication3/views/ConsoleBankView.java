@@ -1,48 +1,48 @@
 package com.mycompany.bankapplication3.views;
 
 import com.mycompany.bankapplication3.enums.AccountType;
-import com.mycompany.bankapplication3.enums.CardOption;
+import com.mycompany.bankapplication3.enums.ATMOption;
 import com.mycompany.bankapplication3.enums.CardType;
 import com.mycompany.bankapplication3.enums.NetBankingOption;
-import com.mycompany.bankapplication3.enums.WelcomeOption;
+import com.mycompany.bankapplication3.enums.MainOption;
 import com.mycompany.bankapplication3.models.accounts.BankAccount;
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleBankView implements IBankView {
+public class ConsoleBankView implements IMainView, IAuthView, IATMView, INetBankingView {
     Scanner scanner = new Scanner(System.in);
 
     @Override
-    public WelcomeOption getWelcomeChoice() {
+    public MainOption getMainChoice() {
         System.out.println("1. New User Registration");
-        System.out.println("2. Net Banking");
+        System.out.println("2. Net Banking Login");
         System.out.println("3. Use Card");
         System.out.println("0. Exit");
         
         System.out.print("Enter choice: ");
         return switch(scanner.nextInt()) {
-            case 1 -> WelcomeOption.REGISTER;
-            case 2 -> WelcomeOption.NETBANKING;
-            case 3 -> WelcomeOption.CARD;
-            case 4 -> WelcomeOption.EXIT;
-            default -> WelcomeOption.INVALID;
+            case 1 -> MainOption.REGISTER;
+            case 2 -> MainOption.LOGIN;
+            case 3 -> MainOption.CARD;
+            case 0 -> MainOption.EXIT;
+            default -> MainOption.INVALID;
         };     
     }
 
     @Override
-    public CardOption getCardMenuChoice() {
+    public ATMOption getCardMenuChoice() {
         System.out.println("1. Deposit Cash");
         System.out.println("2. Withdraw Cash");
         System.out.println("3. Swipe Shopping");
-        System.out.println("0. Exit");
+        System.out.println("0. Exit From ATM");
         
         System.out.print("Enter choice: ");
         return switch(scanner.nextInt()) {
-            case 1 -> CardOption.DEPOSIT;
-            case 2 -> CardOption.WITHDRAW;
-            case 3 -> CardOption.SWIPE;
-            case 4 -> CardOption.EXIT;
-            default -> CardOption.INVALID;
+            case 1 -> ATMOption.DEPOSIT;
+            case 2 -> ATMOption.WITHDRAW;
+            case 3 -> ATMOption.SWIPE;
+            case 0 -> ATMOption.EXIT;
+            default -> ATMOption.INVALID;
         };  
     }
 
@@ -58,9 +58,9 @@ public class ConsoleBankView implements IBankView {
         return switch(scanner.nextInt()) {
             case 1 -> NetBankingOption.LIST_ACCOUNTS;
             case 2 -> NetBankingOption.CREATE_ACCOUNT;
-            case 3 -> NetBankingOption.GET_CARD;
+            case 3 -> NetBankingOption.ISSUE_CARD;
             case 4 -> NetBankingOption.TRANSFER_FUND;
-            case 5 -> NetBankingOption.LOGOUT;
+            case 0 -> NetBankingOption.LOGOUT;
             default -> NetBankingOption.INVALID;
         };  
     }
@@ -90,6 +90,16 @@ public class ConsoleBankView implements IBankView {
             default -> CardType.DEFAULT;
         };
     }
+    
+    @Override
+    public String[] getRegistrationDetails() {
+        System.out.print("Enter username: ");
+        String username = scanner.next();
+        System.out.print("Enter password: ");
+        String password = scanner.next();
+        
+        return new String[]{username, password};
+    }
 
     @Override
     public String[] getLoginDetails() {
@@ -105,6 +115,16 @@ public class ConsoleBankView implements IBankView {
     public String getAccountNumber() {
         System.out.print("Enter account number: ");
         return scanner.next();
+    }
+    
+    @Override
+    public String[] getAccountNumbersForTransferFund() {
+        System.out.print("Enter 'from' account number: ");
+        String from = scanner.next();
+        System.out.print("Enter 'to' account number: ");
+        String to = scanner.next();
+        
+        return new String[]{from, to};
     }
     
     @Override
@@ -152,6 +172,11 @@ public class ConsoleBankView implements IBankView {
     @Override
     public void displayMessage(String message) {
         System.out.println(message);
+    }
+    
+    @Override
+    public void displayError(String message) {
+        System.out.println("Error: " + message);
     }
 
     @Override

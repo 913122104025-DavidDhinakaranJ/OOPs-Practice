@@ -7,7 +7,7 @@ public abstract class BankAccount {
     private static final AtomicLong accCounter = new AtomicLong(10000);
     
     private final String accNo;
-    private String userId;
+    private final String userId;
     protected double balance;
     
     public BankAccount(double initialAmount, String userId) {

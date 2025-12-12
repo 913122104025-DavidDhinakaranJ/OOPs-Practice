@@ -1,0 +1,17 @@
+Customer Use Cases:
+    -Login/Register
+    -Search/Browse Movies
+    -View Movie Details
+    -Select Shows
+    -Select Seats
+    -Book Tickets
+    -Cancel Booking
+    -View Booking History
+    -Make Payment
+
+Admin Use Cases:
+    -Manage Theaters
+    -Manage Shows
+    -Manage Movies
+    -Manage Pricing
+    -Block/Unblock User

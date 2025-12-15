@@ -1,17 +1,31 @@
 Customer Use Cases:
-    -Login/Register
-    -Search/Browse Movies
-    -View Movie Details
-    -Select Shows
-    -Select Seats
-    -Book Tickets
-    -Cancel Booking
-    -View Booking History
-    -Make Payment
+    -Login/Register:
+        -Create an account or login to save history and preferences
+    -Search/Browse Movies:
+        -Search movies by city, genre, language, date
+    -View Movie Details:
+        -view movie description, genre, ratings, release date, etc
+    -View Shows:
+        -View available showtimes for a movie
+    -Select Seats:
+        -Pick one or more available seats for a specific show
+    -Book Tickets:
+        -Confirm selection and proceed to payment
+    -Cancel Booking:
+        -Cancel an active booking
+    -View Booking History:
+        -See past and upcoming tickets with their status
+    -Make Payment:
+        -Complete transaction using payment options (UPI, Card, NetBanking, Wallet)
 
 Admin Use Cases:
-    -Manage Theaters
-    -Manage Shows
-    -Manage Movies
-    -Manage Pricing
-    -Block/Unblock User
+    -Manage Theaters:
+        -Add/Edit theaters, cinema halls, seat layouts
+    -Manage Shows:
+        -Add/Edit shows (Change time, Cancel show) 
+    -Manage Movies:
+        -Add new movie, Update movie details, Delete movie
+    -Manage Pricing:
+        -Set price for a specific show or seat type
+    -Manage User:
+        -Block/Unblock users for certain violations.

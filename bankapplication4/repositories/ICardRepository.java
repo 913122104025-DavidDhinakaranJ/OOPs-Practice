@@ -1,0 +1,1 @@
+package com.mycompany.bankapplication4.repositories;import com.mycompany.bankapplication4.models.cards.Card;public interface ICardRepository {    void saveCard(Card card);    Card findCard(String cardNo);}

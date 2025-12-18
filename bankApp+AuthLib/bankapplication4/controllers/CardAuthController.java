@@ -1,5 +1,7 @@
 package com.mycompany.bankapplication4.controllers;
 
+import com.mycompany.bankapplication4.exceptions.IncorrectPinException;
+import com.mycompany.bankapplication4.exceptions.InvalidCardNumberException;
 import com.mycompany.bankapplication4.models.cards.Card;
 import com.mycompany.bankapplication4.repositories.ICardRepository;
 
@@ -11,13 +13,13 @@ public class CardAuthController implements ICardAuthController {
     }
 
     @Override
-    public Card handleCardAuth(String cardNo, int pin) throws Exception {
+    public Card handleCardAuth(String cardNo, int pin) throws InvalidCardNumberException, IncorrectPinException {
         Card card = cards.findCard(cardNo);
         
         if(card == null) {
-            throw new Exception("Invalid Card Number");
+            throw new InvalidCardNumberException();
         } else if(!card.validatePin(pin)) {
-            throw new Exception("Incorrect PIN");
+            throw new IncorrectPinException();
         }
         
         return card;

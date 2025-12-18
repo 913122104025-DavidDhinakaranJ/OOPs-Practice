@@ -1,6 +1,8 @@
 package com.mycompany.bankapplication4.views;
 
 import com.mycompany.bankapplication4.controllers.ICardAuthController;
+import com.mycompany.bankapplication4.exceptions.IncorrectPinException;
+import com.mycompany.bankapplication4.exceptions.InvalidCardNumberException;
 import com.mycompany.bankapplication4.models.cards.Card;
 import java.util.Scanner;
 
@@ -24,8 +26,10 @@ public class ConsoleATMAuthView implements IATMAuthView {
             displayMessage("Using Card...");
             return card;
             
-        } catch (Exception e) {
-            displayError(e.getMessage());
+        } catch (InvalidCardNumberException e) {
+            displayError("Invalid Card Number");
+        } catch (IncorrectPinException e) {
+            displayError("Incorrect PIN");
         }
         return null;
     }

@@ -1,7 +1,8 @@
 package com.mycompany.bankapplication4.controllers;
 
-import com.mycompany.bankapplication4.models.User;
+import com.mycompany.bankapplication4.models.users.User;
 import com.mycompany.bankapplication4.models.cards.Card;
+import com.mycompany.bankapplication4.models.users.factory.UserFactory;
 import com.mycompany.bankapplication4.repositories.IAccountRepository;
 import com.mycompany.bankapplication4.repositories.ICardRepository;
 import com.mycompany.bankapplication4.repositories.IUserRepository;
@@ -27,14 +28,14 @@ public class MainController implements IMainController {
 
     @Override
     public void handleRegistration() {
-        IAuthView authView = new ConsoleAuthView(new AuthController(userRepository));
+        IAuthView authView = new ConsoleAuthView(new AuthController(userRepository, new UserFactory()));
         authView.handleRegistration();    
     }
 
     @Override
     public void handleLogin() {
-        IAuthView authView = new ConsoleAuthView(new AuthController(userRepository));
-        User user = authView.handleLogin();
+        IAuthView authView = new ConsoleAuthView(new AuthController(userRepository, new UserFactory()));
+        User user = (User) authView.handleLogin();
         if(user == null) return;
         INetBankingView netBankingView = new ConsoleNetBankingView(new NetBankingController(user, accountRepository, cardRepository));
         netBankingView.runNetBankingView();

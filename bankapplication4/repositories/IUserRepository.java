@@ -1,1 +1,1 @@
-package com.mycompany.bankapplication4.repositories;import com.mycompany.bankapplication4.models.User;public interface IUserRepository {    void saveUser(User user);    User findUser(String username);    boolean isUsernameTaken(String username);}
+package com.mycompany.bankapplication4.repositories;import com.mycompany.bankapplication4.models.users.AuthenticatableUser;public interface IUserRepository {    void saveUser(AuthenticatableUser user);    AuthenticatableUser findUser(String username);    boolean isUsernameTaken(String username);}

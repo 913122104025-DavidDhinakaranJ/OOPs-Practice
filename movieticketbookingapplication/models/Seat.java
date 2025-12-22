@@ -27,11 +27,11 @@ public class Seat {
         return this.seatNumber;
     }
     
-   public SeatType getSeatType() {
-       return this.type;
-   }
-   
-   public void changeSeatType(SeatType type) {
-       this.type = type;
-   }
+    public SeatType getSeatType() {
+        return this.type;
+    }
+
+    public void changeSeatType(SeatType type) {
+        this.type = type;
+    }
 }

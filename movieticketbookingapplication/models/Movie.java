@@ -3,9 +3,11 @@ package com.mycompany.movieticketbookingapplication.models;
 import com.mycompany.movieticketbookingapplication.enums.Genre;
 import com.mycompany.movieticketbookingapplication.enums.Language;
 import com.mycompany.movieticketbookingapplication.enums.Rating;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Movie {
@@ -13,17 +15,17 @@ public class Movie {
     
     private final String movieId;
     private final String title;
-    private final List<Genre> genres;
+    private final Set<Genre> genres;
     private int durationInMinutes;
-    private final List<Language> languages;
+    private final Set<Language> languages;
     private final Rating rating;
-    private Date releaseDate;
+    private LocalDate releaseDate;
     
     public Movie(String title, Rating rating) {
         this.movieId = "MOV" + idCounter.incrementAndGet();
         this.title = title;
-        this.genres = new ArrayList<>();
-        this.languages = new ArrayList<>();
+        this.genres = new HashSet<>();
+        this.languages = new HashSet<>();
         this.rating = rating;
     }
 
@@ -36,7 +38,7 @@ public class Movie {
     }
 
     public List<Genre> getGenres() {
-        return genres;
+        return new ArrayList<>(genres);
     }
     
     public void addGenre(Genre genre) {
@@ -52,7 +54,7 @@ public class Movie {
     }
 
     public List<Language> getLanguages() {
-        return languages;
+        return new ArrayList<>(languages);
     }
     
     public void addLanguage(Language language) {
@@ -63,11 +65,11 @@ public class Movie {
         return rating;
     }
 
-    public Date getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
     

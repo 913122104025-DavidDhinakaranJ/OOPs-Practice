@@ -5,15 +5,18 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Theatre {
+
     private static final AtomicLong idCounter = new AtomicLong();
     private final AtomicLong hallIdCounter;
     
     private final String theatreId;
+    private final String name;
     private final String address;
     private final List<CinemaHall> halls;
     
-    public Theatre(String address) {
+    public Theatre(String name, String address) {
         this.theatreId = "T" + idCounter.incrementAndGet();
+        this.name = name;
         this.address = address;
         this.halls = new ArrayList<>();
         this.hallIdCounter = new AtomicLong();
@@ -21,6 +24,10 @@ public class Theatre {
     
     public String getTheatreId() {
         return theatreId;
+    }
+    
+    public String getName() {
+        return name;
     }
 
     public String getAddress() {

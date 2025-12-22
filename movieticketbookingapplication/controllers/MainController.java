@@ -3,6 +3,7 @@ package com.mycompany.movieticketbookingapplication.controllers;
 import com.mycompany.authlib.controller.AuthController;
 import com.mycompany.authlib.views.ConsoleAuthView;
 import com.mycompany.authlib.views.IAuthView;
+import com.mycompany.movieticketbookingapplication.models.users.Customer;
 import com.mycompany.movieticketbookingapplication.models.users.User;
 import com.mycompany.movieticketbookingapplication.models.users.userFactories.CustomerFactory;
 import com.mycompany.movieticketbookingapplication.repositories.IUserRepository;
@@ -30,11 +31,11 @@ public class MainController implements IMainController {
         if(user == null) return;
         switch(user.getRole()) {
             case CUSTOMER -> {
-                ConsoleCustomerView customerView = new ConsoleCustomerView();
+                ConsoleCustomerView customerView = new ConsoleCustomerView(new CustomerController((Customer) user));
                 customerView.runCustomerView();
             }
             case ADMIN -> {
-                ConsoleAdminView adminView = new ConsoleAdminView();
+                ConsoleAdminView adminView = new ConsoleAdminView(new AdminController(null));
                 adminView.runAdminView();
             }
         }
@@ -42,7 +43,7 @@ public class MainController implements IMainController {
 
     @Override
     public void handleSearch() {
-        ConsoleSearchView searchView = new ConsoleSearchView();
+        ConsoleSearchView searchView = new ConsoleSearchView(new SearchController(null, null));
         searchView.runSearchView();
     }
 }

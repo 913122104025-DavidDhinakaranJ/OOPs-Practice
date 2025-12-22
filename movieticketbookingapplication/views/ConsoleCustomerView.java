@@ -1,15 +1,24 @@
 package com.mycompany.movieticketbookingapplication.views;
 
+import com.mycompany.movieticketbookingapplication.controllers.ICustomerController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.CustomerMenuOption;
+import com.mycompany.movieticketbookingapplication.models.Booking;
+import com.mycompany.movieticketbookingapplication.models.Seat;
+import com.mycompany.movieticketbookingapplication.models.Show;
+import com.mycompany.movieticketbookingapplication.models.ShowSeat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleCustomerView {
     private final Scanner scanner;
+    private final ICustomerController customerController;
     
     private boolean login;
     
-    public ConsoleCustomerView() {
+    public ConsoleCustomerView(ICustomerController customerController) {
         this.scanner = new Scanner(System.in);
+        this.customerController = customerController;
     }
     
     public void runCustomerView() {
@@ -40,23 +49,51 @@ public class ConsoleCustomerView {
     }
 
     private void handleSearchMovie() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        customerController.handleSearchMovie();
     }
 
     private void handleViewBookHistory() {
-        throw new UnsupportedOperationException("Not supported yet."); 
+        List<Booking> bookings = customerController.getBookingHistory();
+        if(bookings.isEmpty()) {
+            displayMessage("No Booking History Found.");
+        } else {
+            displayMessage("My Bookings:");
+            displayBookHistory(bookings);
+        }
     }
 
     private void handleLogout() {
         login = false;
-        System.out.println("Logged out Successfully.");
+        displayMessage("Logged out Successfully.");
     }
 
     private void handleInvalidChoice() {
         displayError("Invalid Choice");
     }
     
+    private void displayMessage(String message) {
+        System.out.println(message);
+    }
+    
     private void displayError(String message) {
         System.out.println("Error: " + message);
+    }
+
+    private void displayBookHistory(List<Booking> bookings) {
+        for(Booking booking : bookings) {
+            List<String> seats = new ArrayList<>();
+            for(ShowSeat showSeat : booking.getSeats()) {
+                Seat seat = showSeat.getSeat();
+                seats.add(seat.getRow() + seat.getSeatNumber() + " - " + seat.getSeatType());
+            }
+            
+            Show show = booking.getShow();
+            System.out.println("Date:" + booking.getBookingDate().toString()
+                    + " Movie: " + show.getMovie().getTitle()
+                    + " Theatre: " + show.getTheatre().getName()
+                    + " Cinema Hall: " + show.getCinemaHall().getName()
+                    + " Seats: " + String.join(", ", seats) 
+                    + " Status: " + booking.getBookingStatus());
+        }
     }
 }

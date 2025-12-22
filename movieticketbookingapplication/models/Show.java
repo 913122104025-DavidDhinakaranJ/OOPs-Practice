@@ -1,21 +1,24 @@
 package com.mycompany.movieticketbookingapplication.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
 public class Show {
     private final String showId;
     private final Movie movie;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private final Theatre theatre;
     private final CinemaHall cinemaHall;
     private final List<ShowSeat> showSeats;
     
-    public Show(String showId, Movie movie, CinemaHall cinemaHall, List<ShowSeat> showSeats) {
+    public Show(String showId, Movie movie, CinemaHall cinemaHall, List<ShowSeat> showSeats, Theatre theatre) {
         this.showId = showId;
         this.movie = movie;
         this.cinemaHall = cinemaHall;
         this.showSeats = showSeats;
+        this.theatre = theatre;
     }
 
     public String getShowId() {
@@ -26,20 +29,24 @@ public class Show {
         return movie;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+    
+    public Theatre getTheatre() {
+        return theatre;
     }
 
     public CinemaHall getCinemaHall() {

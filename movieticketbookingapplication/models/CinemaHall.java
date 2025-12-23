@@ -10,7 +10,7 @@ public class CinemaHall {
     
     private final String hallId;
     private final String name;
-    private final int totalSeats;
+    private int totalSeats;
     private final List<Seat> seats;
     
     public CinemaHall(String hallId, String name) {
@@ -38,5 +38,15 @@ public class CinemaHall {
     
     public void addSeat(String row, int seatNumber, SeatType type) {
         this.seats.add(new Seat(hallId + "S" + seatIdCounter.incrementAndGet(), row, seatNumber, type));
+        totalSeats++;
+    }
+    
+    public void removeSeat(String row, int seatNumber) {
+        for(Seat seat : seats) {
+            if(seat.getRow().equals(row) && seat.getSeatNumber() == seatNumber) {
+                seats.remove(seat);
+                return;
+            }
+        }
     }
 }

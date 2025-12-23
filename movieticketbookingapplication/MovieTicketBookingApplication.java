@@ -1,6 +1,6 @@
 package com.mycompany.movieticketbookingapplication;
 
-import com.mycompany.movieticketbookingapplication.controllers.MainController;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.MainController;
 import com.mycompany.movieticketbookingapplication.repositories.InMemoryRepository;
 import com.mycompany.movieticketbookingapplication.views.ConsoleMainView;
 

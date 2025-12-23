@@ -1,6 +1,6 @@
 package com.mycompany.movieticketbookingapplication.views;
 
-import com.mycompany.movieticketbookingapplication.controllers.MainController;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.MainController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.MainMenuOption;
 import java.util.Scanner;
 

@@ -44,6 +44,10 @@ public class Movie {
     public void addGenre(Genre genre) {
         this.genres.add(genre);
     }
+    
+    public void removeGenre(Genre genre) {
+        this.genres.remove(genre);
+    }
 
     public int getDurationInMinutes() {
         return durationInMinutes;
@@ -59,6 +63,10 @@ public class Movie {
     
     public void addLanguage(Language language) {
         this.languages.add(language);
+    }
+    
+    public void removeLanguage(Language language) {
+        this.languages.remove(language);
     }
 
     public Rating getRating() {

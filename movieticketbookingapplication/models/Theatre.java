@@ -38,7 +38,11 @@ public class Theatre {
         return halls;
     }
 
-    public void addHall(String name) {
-        this.halls.add(new CinemaHall(this.theatreId + "H" + hallIdCounter.incrementAndGet(), name));
+    public void addHall(String cinemaHallName) {
+        this.halls.add(new CinemaHall(this.theatreId + "H" + hallIdCounter.incrementAndGet(), cinemaHallName));
+    }
+    
+    public void removeHall(CinemaHall cinemaHall) {
+        this.halls.remove(cinemaHall);
     }
 }

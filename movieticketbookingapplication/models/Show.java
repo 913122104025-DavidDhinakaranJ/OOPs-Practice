@@ -1,10 +1,13 @@
 package com.mycompany.movieticketbookingapplication.models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Show {
+    private static final AtomicLong idCounter = new AtomicLong(10000);
+    
     private final String showId;
     private final Movie movie;
     private LocalDateTime startTime;
@@ -13,12 +16,16 @@ public class Show {
     private final CinemaHall cinemaHall;
     private final List<ShowSeat> showSeats;
     
-    public Show(String showId, Movie movie, CinemaHall cinemaHall, List<ShowSeat> showSeats, Theatre theatre) {
-        this.showId = showId;
+    public Show(Movie movie, CinemaHall cinemaHall, Theatre theatre) {
+        this.showId = "SHOW" + idCounter.incrementAndGet();
         this.movie = movie;
         this.cinemaHall = cinemaHall;
-        this.showSeats = showSeats;
         this.theatre = theatre;
+        
+        this.showSeats = new ArrayList<>();
+        cinemaHall.getSeats().forEach(seat -> {
+            showSeats.add(new ShowSeat(this.showId + seat.getSeatId(), seat, this));
+        });
     }
 
     public String getShowId() {

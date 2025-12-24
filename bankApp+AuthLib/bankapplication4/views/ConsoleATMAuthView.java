@@ -2,17 +2,17 @@ package com.mycompany.bankapplication4.views;
 
 import com.mycompany.bankapplication4.controllers.ICardAuthController;
 import com.mycompany.bankapplication4.exceptions.IncorrectPinException;
-import com.mycompany.bankapplication4.exceptions.InvalidCardNumberException;
+import com.mycompany.bankapplication4.exceptions.CardNotFoundException;
 import com.mycompany.bankapplication4.models.cards.Card;
-import java.util.Scanner;
+import com.mycompany.bankapplication4.utils.ConsoleIOUtil;
 
 public class ConsoleATMAuthView implements IATMAuthView {
     
-    private final Scanner scanner;
+    private final ConsoleIOUtil ioHandler;
     private final ICardAuthController cardAuthController;
     
     public ConsoleATMAuthView(ICardAuthController cardAuthController) {
-        scanner = new Scanner(System.in);
+        ioHandler = new ConsoleIOUtil();
         this.cardAuthController = cardAuthController;
     }
     
@@ -23,32 +23,22 @@ public class ConsoleATMAuthView implements IATMAuthView {
         
         try {
             Card card = cardAuthController.handleCardAuth(cardNo, pin);
-            displayMessage("Using Card...");
+            ioHandler.displaySuccess("Using Card...");
             return card;
             
-        } catch (InvalidCardNumberException e) {
-            displayError("Invalid Card Number");
+        } catch (CardNotFoundException e) {
+            ioHandler.displayError("Card Not Found");
         } catch (IncorrectPinException e) {
-            displayError("Incorrect PIN");
+            ioHandler.displayError("Incorrect PIN");
         }
         return null;
     }
     
     private String getCardNumber() {
-        System.out.print("Enter card number: ");
-        return scanner.next();
+        return ioHandler.readCardNumber("Enter card number: ");
     }
 
     private int getPin() {
-        System.out.print("Enter pin: ");
-        return scanner.nextInt();
-    }
-    
-    private void displayMessage(String message) {
-        System.out.println("Success: " + message);
-    }
-    
-    private void displayError(String message) {
-        System.out.println("Error: " + message);
+        return ioHandler.readPin("Enter pin: ");
     }
 }

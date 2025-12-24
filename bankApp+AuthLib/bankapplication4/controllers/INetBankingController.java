@@ -9,7 +9,7 @@ import java.util.List;
 public interface INetBankingController {
     public List<BankAccount> getAccountsList();
     
-    public String createSavingsAccount(double initialAmount);
+    public String createSavingsAccount(double initialAmount) throws InsufficientAmountException;
     
     public String createCurrentAccount(double initialAmount);
     

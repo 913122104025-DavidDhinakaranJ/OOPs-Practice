@@ -11,6 +11,4 @@ public interface ISearchController {
     List<Movie> getMovies(Genre genre);
     List<Movie> getMovies(Language language);
     List<Movie> getMovies(Rating rating);
-
-    void handleMovieSelection(Movie movie);
 }

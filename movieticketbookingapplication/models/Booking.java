@@ -3,6 +3,7 @@ package com.mycompany.movieticketbookingapplication.models;
 import com.mycompany.movieticketbookingapplication.enums.BookingStatus;
 import com.mycompany.movieticketbookingapplication.models.users.Customer;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -39,10 +40,16 @@ public class Booking {
     
     public void updateStatusToConfirmed() {
         this.status = BookingStatus.CONFIRMED;
+        for(ShowSeat seat : seats) {
+            seat.bookSeat();
+        }
     }
     
     public void updateStatusToCancelled() {
         this.status = BookingStatus.CANCELLED;
+        for(ShowSeat seat : seats) {
+            seat.cancelSeat();
+        }
     }
     
     public Customer getCustomer() {
@@ -54,6 +61,6 @@ public class Booking {
     }
 
     public List<ShowSeat> getSeats() {
-        return seats;
+        return new ArrayList<>(seats);
     }
 }

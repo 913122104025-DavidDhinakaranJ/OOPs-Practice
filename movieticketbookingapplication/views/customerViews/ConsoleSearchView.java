@@ -1,22 +1,26 @@
 package com.mycompany.movieticketbookingapplication.views.customerViews;
 
+import com.mycompany.movieticketbookingapplication.contexts.ApplicationContext;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.MovieController;
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.ISearchController;
 import com.mycompany.movieticketbookingapplication.enums.Genre;
 import com.mycompany.movieticketbookingapplication.enums.Language;
 import com.mycompany.movieticketbookingapplication.enums.Rating;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.customerMenuOptions.SearchMenuOption;
 import com.mycompany.movieticketbookingapplication.models.Movie;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConsoleSearchView {
-    private final Scanner scanner;
+    private final ConsoleInputUtil inputReader;
+    private final ApplicationContext appContext;
     private final ISearchController searchController;
     
     private boolean searching;
     
     public ConsoleSearchView(ISearchController searchController) {
-        this.scanner = new Scanner(System.in);
+        inputReader = new ConsoleInputUtil();
+        appContext = ApplicationContext.getInstance();
         this.searchController = searchController;
     }
     
@@ -42,8 +46,7 @@ public class ConsoleSearchView {
         System.out.println("4. Search By Rating");
         System.out.println("0. Close Search");
         
-        System.out.print("Enter choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> SearchMenuOption.SEARCH_BY_TITLE;
             case 2 -> SearchMenuOption.SEARCH_BY_GENRE;
             case 3 -> SearchMenuOption.SEARCH_BY_LANGUAGE;
@@ -55,29 +58,41 @@ public class ConsoleSearchView {
 
     private void handleSearchByTitle() {
         String title = getTitleChoice();
+        
         List<Movie> movies = searchController.getMovies(title);
-        handleMoviesList(movies);
+        
+        displayMovies(movies);
+        handleMoviesListSelection(movies);
     }
 
     private void handleSearchByGenre() {
         Genre genre = getGenreChoice();
         if(genre == null) return;
+        
         List<Movie> movies = searchController.getMovies(genre);
-        handleMoviesList(movies);
+        
+        displayMovies(movies);
+        handleMoviesListSelection(movies);
     }
 
     private void handleSearchByLanguage() {
         Language language = getLanguageChoice();
         if(language == null) return;
+        
         List<Movie> movies = searchController.getMovies(language);
-        handleMoviesList(movies); 
+        
+        displayMovies(movies);
+        handleMoviesListSelection(movies); 
     }
 
     private void handleSearchByRating() {
         Rating rating = getRatingChoice();
         if(rating == null) return;
+        
         List<Movie> movies = searchController.getMovies(rating);
-        handleMoviesList(movies);
+        
+        displayMovies(movies);
+        handleMoviesListSelection(movies);
     }
 
     private void handleCloseSearch() {
@@ -89,11 +104,12 @@ public class ConsoleSearchView {
         displayError("Invalid Choice");
     }
     
-    private void handleMoviesList(List<Movie> movies) {
-        displayMovies(movies);
+    private void handleMoviesListSelection(List<Movie> movies) {
         Movie movie = getMovieChoice(movies);
         if(movie == null) return;
-        searchController.handleMovieSelection(movie);
+        
+        ConsoleMovieView movieView = new ConsoleMovieView(new MovieController(movie, appContext.getShowRepository()));
+        movieView.runMovieView();
     }
     
     private void displayMovies(List<Movie> movies) {
@@ -108,8 +124,7 @@ public class ConsoleSearchView {
     }
     
     private String getTitleChoice() {
-        System.out.print("Enter Title: ");
-        return scanner.nextLine();
+        return inputReader.readString("Enter Title: ");
     }
     
     private Genre getGenreChoice() {
@@ -118,15 +133,16 @@ public class ConsoleSearchView {
             System.out.println(i + 1 + ". " + genres[i]);
         }
         
-        System.out.print("Enter Genre Choice: ");
-        int genreChoice = scanner.nextInt();
-        
-        if(genreChoice < 1 || genreChoice > genres.length) {
-            displayError("Invalid Genre Choice.");
-            return null;
+        while(true) {
+            int genreChoice = inputReader.readInt("Enter Genre Choice: ");
+
+            if(genreChoice < 1 || genreChoice > genres.length) {
+                displayError("Invalid Genre Choice.");
+                continue;
+            }
+
+            return genres[genreChoice - 1];
         }
-        
-        return genres[genreChoice - 1];
     }
     
     private Language getLanguageChoice() {
@@ -135,15 +151,16 @@ public class ConsoleSearchView {
             System.out.println(i + 1 + ". " + languages[i]);
         }
         
-        System.out.print("Enter Language Choice: ");
-        int languageChoice = scanner.nextInt();
-        
-        if(languageChoice < 1 || languageChoice > languages.length) {
-            displayError("Invalid Language Choice.");
-            return null;
+        while(true) {
+            int languageChoice = inputReader.readInt("Enter Language Choice: ");
+
+            if(languageChoice < 1 || languageChoice > languages.length) {
+                displayError("Invalid Language Choice.");
+                continue;
+            }
+
+            return languages[languageChoice - 1];
         }
-        
-        return languages[languageChoice - 1];
     }
     
     private Rating getRatingChoice() {
@@ -152,31 +169,34 @@ public class ConsoleSearchView {
             System.out.println(i + 1 + ". " + ratings[i]);
         }
         
-        System.out.print("Enter Rating Choice: ");
-        int ratingChoice = scanner.nextInt();
-        
-        if(ratingChoice < 1 || ratingChoice > ratings.length) {
-            displayError("Invalid Rating Choice.");
-            return null;
+        while(true) {
+            int ratingChoice = inputReader.readInt("Enter Rating Choice: ");
+
+            if(ratingChoice < 1 || ratingChoice > ratings.length) {
+                displayError("Invalid Rating Choice.");
+                continue;
+            }
+
+            return ratings[ratingChoice - 1];
         }
-        
-        return ratings[ratingChoice - 1];
     }
     
     private Movie getMovieChoice(List<Movie> movies) {
         System.out.println("0. Back");
-        System.out.print("Enter Movie Choice: ");
-        int movieChoice = scanner.nextInt();
+        int movieChoice = inputReader.readInt("Enter Movie Choice: ");
+        
         if(movieChoice == 0) {
             return null;
         }
         
-        if(movieChoice < 1 || movieChoice > movies.size()) {
-            displayError("Invalid Movie Choice.");
-            return null;
+        while(true) {
+            if(movieChoice < 1 || movieChoice > movies.size()) {
+                displayError("Invalid Movie Choice.");
+                continue;
+            }
+
+            return movies.get(movieChoice - 1);
         }
-        
-        return movies.get(movieChoice - 1);
     }
     
     private void displayError(String message) {

@@ -3,7 +3,6 @@ package com.mycompany.movieticketbookingapplication.controllers.implementations.
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.ICustomerController;
 import com.mycompany.movieticketbookingapplication.models.Booking;
 import com.mycompany.movieticketbookingapplication.models.users.Customer;
-import com.mycompany.movieticketbookingapplication.views.customerViews.ConsoleSearchView;
 import java.util.List;
 
 public class CustomerController implements ICustomerController {
@@ -11,12 +10,6 @@ public class CustomerController implements ICustomerController {
 
     public CustomerController(Customer customer) {
         this.customer = customer;
-    }
-
-    @Override
-    public void handleSearchMovie() {
-        ConsoleSearchView searchView = new ConsoleSearchView(new SearchController(customer, null));
-        searchView.runSearchView();
     }
 
     @Override

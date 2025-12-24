@@ -1,19 +1,20 @@
 package com.mycompany.movieticketbookingapplication.views.customerViews;
 
+import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.ShowController;
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.IMovieController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.customerMenuOptions.MovieMenuOption;
 import com.mycompany.movieticketbookingapplication.models.Show;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConsoleMovieView {
-    private final Scanner scanner;
+    private final ConsoleInputUtil inputReader;
     private final IMovieController movieController;
 
     private boolean running;
 
     public ConsoleMovieView(IMovieController movieController) {
-        this.scanner = new Scanner(System.in);
+        inputReader = new ConsoleInputUtil();
         this.movieController = movieController;
     }
 
@@ -35,8 +36,7 @@ public class ConsoleMovieView {
         System.out.println("2. View Movie Shows");
         System.out.println("0. Exit");
         
-        System.out.print("Enter choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> MovieMenuOption.VIEW_DETAILS;
             case 2 -> MovieMenuOption.VIEW_SHOWS;
             case 0 -> MovieMenuOption.EXIT;
@@ -56,6 +56,7 @@ public class ConsoleMovieView {
     private void handleViewShows() {
         List<Show> shows = movieController.getShows();
         displayShows(shows);
+        handleShowListSelection(shows);
     }
 
     private void handleExit() {
@@ -66,12 +67,38 @@ public class ConsoleMovieView {
         displayError("Invalid Choice");
     }
     
+    private void handleShowListSelection(List<Show> shows) {
+        Show show = getShowChoice(shows);
+        if(show == null) return;
+        
+        ConsoleShowView showView = new ConsoleShowView(new ShowController(show));
+        showView.runShowView();
+    }
+    
     private void displayShows(List<Show> shows) {
         for(int i = 0;i < shows.size();i++) {
             Show show = shows.get(i);
             System.out.println(i + 1 + ". Theatre: " + show.getTheatre().getName() 
                     + "Cinema Hall: " + show.getCinemaHall().getName()
                     + "Timing: " + show.getStartTime() + " to " + show.getEndTime());
+        }
+    }
+    
+    private Show getShowChoice(List<Show> shows) {
+        System.out.println("0. Back");
+        int showChoice = inputReader.readInt("Enter Show Choice: ");
+        
+        if(showChoice == 0) {
+            return null;
+        }
+        
+        while(true) {
+            if(showChoice < 1 || showChoice > shows.size()) {
+                displayError("Invalid Show Choice.");
+                continue;
+            }
+
+            return shows.get(showChoice - 1);
         }
     }
     

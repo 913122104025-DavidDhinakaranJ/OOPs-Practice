@@ -1,19 +1,20 @@
 package com.mycompany.movieticketbookingapplication.views.adminViews;
 
+import com.mycompany.movieticketbookingapplication.controllers.implementations.adminControllersImplementations.SeatController;
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.adminControllersInterfaces.ICinemaHallController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.adminMenuOptions.AdminOperationsOption;
 import com.mycompany.movieticketbookingapplication.models.CinemaHall;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConsoleCinemaHallView {
-    private final Scanner scanner;
+    private final ConsoleInputUtil inputReader;
     private final ICinemaHallController cinemaHallController;
     
     private boolean running;
     
     public ConsoleCinemaHallView(ICinemaHallController cinemaHallController) {
-        this.scanner = new Scanner(System.in);
+        inputReader = new ConsoleInputUtil();
         this.cinemaHallController = cinemaHallController;
     }
     
@@ -34,12 +35,11 @@ public class ConsoleCinemaHallView {
     
     private AdminOperationsOption getAdminOperationsOption() {
         System.out.println("1. Add Cinema Hall");
-        System.out.println("2. Update Cinema Hall");
+        System.out.println("2. Handle Seats");
         System.out.println("3. Remove Cinema Hall");
         System.out.println("0. Exit");
         
-        System.out.print("Enter Choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> AdminOperationsOption.ADD;
             case 2 -> AdminOperationsOption.UPDATE;
             case 3 -> AdminOperationsOption.DELETE;
@@ -50,20 +50,21 @@ public class ConsoleCinemaHallView {
 
     private void handleAddCinemaHall() {
         String cinemaHallName = getCinemaHallName();
-        
         cinemaHallController.addCinemaHall(cinemaHallName);
     }
 
     private void handleUpdateCinemaHall() {
         CinemaHall cinemaHall = getCinemaHall();
         if(cinemaHall == null) return;
+        
+        ConsoleSeatView seatView = new ConsoleSeatView(new SeatController(cinemaHall));
     }
 
     private void handleDeleteCinemaHall() {
         CinemaHall cinemaHall = getCinemaHall();
         if(cinemaHall == null) return;
         
-        //cinemaHallController.deleteCinemaHall(cinemaHall);
+        cinemaHallController.deleteCinemaHall(cinemaHall);
     }
 
     private void handleExit() {
@@ -75,25 +76,30 @@ public class ConsoleCinemaHallView {
     }
     
     private String getCinemaHallName() {
-        System.out.print("Enter Cinema Hall Name: ");
-        return scanner.next();
+        return inputReader.readString("Enter Cinema Hall Name: ");
     }
     
     private CinemaHall getCinemaHall() {
         List<CinemaHall> cinemaHallList = cinemaHallController.getCinemaHalls();
+        if(cinemaHallList.isEmpty()) {
+            System.out.println("No Cinema Hall found.");
+            return null;
+        }
+        
         for(int i = 0;i < cinemaHallList.size();i++) {
             System.out.println(i + 1 + ". " + cinemaHallList.get(i).getName());
         }
         
-        System.out.print("Enter CinemaHall Choice: ");
-        int cinemaHallChoice = scanner.nextInt();
-        
-        if(cinemaHallChoice < 1 || cinemaHallChoice > cinemaHallList.size()) {
-            displayError("Invalid CinemaHall Choice.");
-            return null;
+        while(true) {
+            int cinemaHallChoice = inputReader.readInt("Enter CinemaHall Choice: ");
+
+            if(cinemaHallChoice < 1 || cinemaHallChoice > cinemaHallList.size()) {
+                displayError("Invalid CinemaHall Choice.");
+                continue;
+            }
+
+            return cinemaHallList.get(cinemaHallChoice - 1);
         }
-        
-        return cinemaHallList.get(cinemaHallChoice - 1);
     }
     
     private void displayError(String message) {

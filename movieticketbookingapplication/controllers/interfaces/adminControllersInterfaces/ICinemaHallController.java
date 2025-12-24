@@ -7,4 +7,6 @@ public interface ICinemaHallController {
     void addCinemaHall(String cinemaHallName);
 
     List<CinemaHall> getCinemaHalls();
+
+    void deleteCinemaHall(CinemaHall cinemaHall);
 }

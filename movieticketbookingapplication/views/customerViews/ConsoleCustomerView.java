@@ -1,23 +1,27 @@
 package com.mycompany.movieticketbookingapplication.views.customerViews;
 
+import com.mycompany.movieticketbookingapplication.contexts.ApplicationContext;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.SearchController;
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.ICustomerController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.customerMenuOptions.CustomerMenuOption;
 import com.mycompany.movieticketbookingapplication.models.Booking;
 import com.mycompany.movieticketbookingapplication.models.Seat;
 import com.mycompany.movieticketbookingapplication.models.Show;
 import com.mycompany.movieticketbookingapplication.models.ShowSeat;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConsoleCustomerView {
-    private final Scanner scanner;
+    private final ConsoleInputUtil inputReader;
+    private final ApplicationContext appContext;
     private final ICustomerController customerController;
     
     private boolean login;
     
     public ConsoleCustomerView(ICustomerController customerController) {
-        this.scanner = new Scanner(System.in);
+        inputReader = new ConsoleInputUtil();
+        appContext = ApplicationContext.getInstance();
         this.customerController = customerController;
     }
     
@@ -39,8 +43,7 @@ public class ConsoleCustomerView {
         System.out.println("2. View Booking History");
         System.out.println("0. Logout");
         
-        System.out.print("Enter choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> CustomerMenuOption.SEARCH_MOVIE;
             case 2 -> CustomerMenuOption.VIEW_BOOKING_HISTORY;
             case 0 -> CustomerMenuOption.LOGOUT;
@@ -49,32 +52,30 @@ public class ConsoleCustomerView {
     }
 
     private void handleSearchMovie() {
-        customerController.handleSearchMovie();
+        ConsoleSearchView searchView = new ConsoleSearchView(new SearchController(appContext.getMovieRepository()));
+        searchView.runSearchView();
     }
 
     private void handleViewBookHistory() {
         List<Booking> bookings = customerController.getBookingHistory();
         if(bookings.isEmpty()) {
-            displayMessage("No Booking History Found.");
+            System.out.println("No Booking History Found.");
         } else {
-            displayMessage("My Bookings:");
+            System.out.println("My Bookings:");
             displayBookHistory(bookings);
         }
     }
 
     private void handleLogout() {
         login = false;
-        displayMessage("Logged out Successfully.");
+        System.out.println("Logged out Successfully.");
     }
 
     private void handleInvalidChoice() {
         displayError("Invalid Choice");
     }
     
-    private void displayMessage(String message) {
-        System.out.println(message);
-    }
-    
+
     private void displayError(String message) {
         System.out.println("Error: " + message);
     }

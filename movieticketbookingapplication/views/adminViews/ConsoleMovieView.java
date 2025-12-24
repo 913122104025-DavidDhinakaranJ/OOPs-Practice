@@ -7,21 +7,20 @@ import com.mycompany.movieticketbookingapplication.enums.Rating;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.adminMenuOptions.AdminOperationsOption;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.adminMenuOptions.MovieUpdateOption;
 import com.mycompany.movieticketbookingapplication.models.Movie;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 public class ConsoleMovieView {
-    private final Scanner scanner;
+    private final ConsoleInputUtil inputReader;
     private final IMovieController movieController;
     
     private boolean running;
     
     public ConsoleMovieView(IMovieController movieController) {
-        this.scanner = new Scanner(System.in);
+        inputReader = new ConsoleInputUtil();
         this.movieController = movieController;
     }
     
@@ -46,8 +45,7 @@ public class ConsoleMovieView {
         System.out.println("3. Remove Movie");
         System.out.println("0. Exit");
 
-        System.out.print("Enter Choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> AdminOperationsOption.ADD;
             case 2 -> AdminOperationsOption.UPDATE;
             case 3 -> AdminOperationsOption.DELETE;
@@ -97,8 +95,7 @@ public class ConsoleMovieView {
     }
     
     private String getMovieTitle() {
-        System.out.print("Enter Movie Title: ");
-        return scanner.nextLine();
+        return inputReader.readString("Enter Movie Title: ");
     }
     
     private Set<Genre> getGenres(Genre[] genres) {
@@ -106,17 +103,20 @@ public class ConsoleMovieView {
             System.out.println(i + 1 + ". " + genres[i]);
         }
         
-        System.out.print("Enter Genres (Space Seperated): ");
-        String genresChoice = scanner.nextLine();
+        String genresChoice = inputReader.readString("Enter Genre Choices (Space Seperated): ");
         
         Set<Genre> genreList = new HashSet<>();
-        for(String choice : genresChoice.split(" ")) {
-            int index = Integer.parseInt(choice) - 1;
+        for(String choice : genresChoice.trim().split("\\s+")) {
+            try {
+                int index = Integer.parseInt(choice) - 1;
 
-            if(index < 0 || index >= genres.length) {
-                displayError("Invalid Genre Choice: " + index);
+                if(index < 0 || index >= genres.length) {
+                    displayError("Invalid Genre Choice: " + index + " Omitted");
+                }
+                genreList.add(genres[index]);
+            } catch(NumberFormatException e) {
+                displayError("Invalid input");
             }
-            genreList.add(genres[index]);
         }
         
         return genreList;
@@ -127,17 +127,20 @@ public class ConsoleMovieView {
             System.out.println(i + 1 + ". " + languages[i]);
         }
         
-        System.out.print("Enter Langauges (Space Seperated): ");
-        String languagesChoice = scanner.nextLine();
+        String languagesChoice = inputReader.readString("Enter Langauge Choices (Space Seperated): ");
         
         Set<Language> languageList = new HashSet<>();
         for(String choice : languagesChoice.split(" ")) {
-            int index = Integer.parseInt(choice) - 1;
+            try {
+                int index = Integer.parseInt(choice) - 1;
 
-            if(index < 0 || index >= languages.length) {
-                displayError("Invalid Language Choice: " + index);
+                if(index < 0 || index >= languages.length) {
+                    displayError("Invalid Language Choice: " + index + " Omitted");
+                }
+                languageList.add(languages[index]);
+            } catch(NumberFormatException e) {
+                displayError("Invalid input");
             }
-            languageList.add(languages[index]);
         }
         
         return languageList;
@@ -149,31 +152,24 @@ public class ConsoleMovieView {
             System.out.println(i + 1 + ". " + ratings[i]);
         }
         
-        System.out.print("Enter Rating Choice: ");
-        int ratingChoice = scanner.nextInt();
-        
-        if(ratingChoice < 1 || ratingChoice > ratings.length) {
-            displayError("Invalid Rating Choice.");
-            return null;
+        while(true) {
+            int ratingChoice = inputReader.readInt("Enter Rating Choice: ");
+
+            if(ratingChoice < 1 || ratingChoice > ratings.length) {
+                displayError("Invalid Rating Choice.");
+                continue;
+            }
+            
+            return ratings[ratingChoice - 1];
         }
-        
-        return ratings[ratingChoice - 1];
     }
     
     private int getDuration() {
-        System.out.print("Enter duration (in Minutes): ");
-        return scanner.nextInt();
+        return inputReader.readInt("Enter duration (in Minutes): ");
     }
     
     private LocalDate getReleaseDate() {
-        System.out.print("Enter Movie Release Date: ");
-        try {
-            LocalDate date = LocalDate.parse(scanner.nextLine());
-            return date;
-        } catch(DateTimeParseException e) {
-            displayError("Invalid Date Format.");
-        }
-        return null;
+        return inputReader.readDate("Enter Movie Release Date: ");
     }
     
     private MovieUpdateOption getMovieUpdateOption() {
@@ -181,11 +177,8 @@ public class ConsoleMovieView {
         System.out.println("2. Update Languages");
         System.out.println("3. Update Duration");
         System.out.println("4. Update Release Date");
-        
-        System.out.print("Enter Choice: ");
-        scanner.nextInt();
-        
-        return switch(scanner.nextInt()) {
+                
+        return switch(inputReader.readInt("Enter Choice: ")) {
             case 1 -> MovieUpdateOption.UPDATE_GENRES;
             case 2 -> MovieUpdateOption.UPDATE_LANGUAGES;
             case 3 -> MovieUpdateOption.UPDATE_DURATION;
@@ -196,19 +189,25 @@ public class ConsoleMovieView {
     
     private Movie getMovie() {
         List<Movie> movieList = movieController.getAllMovies();
+        if(movieList.isEmpty()) {
+            System.out.println("No Movie found.");
+            return null;
+        }
+        
         for(int i = 0;i < movieList.size();i++) {
             System.out.println(i + 1 + ". " + movieList.get(i).getTitle());
         }
         
-        System.out.print("Enter Movie Choice: ");
-        int movieChoice = scanner.nextInt();
+        while(true) {
+            int movieChoice = inputReader.readInt("Enter Movie Choice: ");
         
-        if(movieChoice < 1 || movieChoice > movieList.size()) {
-            displayError("Invalid Movie Choice.");
-            return null;
+            if(movieChoice < 1 || movieChoice > movieList.size()) {
+                displayError("Invalid Movie Choice.");
+                continue;
+            }
+
+            return movieList.get(movieChoice - 1);
         }
-        
-        return movieList.get(movieChoice - 1);
     }
     
     private void handleUpdateGenres(Movie movie) {
@@ -216,7 +215,7 @@ public class ConsoleMovieView {
         Set<Genre> addGenres = getGenres(Genre.values());
                 
         System.out.println("Remove Genres: ");
-        Set<Genre> removeGenres = getGenres(movie.getGenres().toArray(new Genre[0]));
+        Set<Genre> removeGenres = getGenres(movie.getGenres().toArray(Genre[]::new));
         
         movieController.updateMovieGenres(movie, addGenres, removeGenres);
     }
@@ -226,7 +225,7 @@ public class ConsoleMovieView {
         Set<Language> addLanguages = getLanguages(Language.values());
                 
         System.out.println("Remove Languages: ");
-        Set<Language> removeLanguages = getLanguages(movie.getLanguages().toArray(new Language[0]));
+        Set<Language> removeLanguages = getLanguages(movie.getLanguages().toArray(Language[]::new));
         
         movieController.updateMovieLanguages(movie, addLanguages, removeLanguages);
     }

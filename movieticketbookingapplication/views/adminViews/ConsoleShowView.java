@@ -6,21 +6,18 @@ import com.mycompany.movieticketbookingapplication.models.CinemaHall;
 import com.mycompany.movieticketbookingapplication.models.Movie;
 import com.mycompany.movieticketbookingapplication.models.Show;
 import com.mycompany.movieticketbookingapplication.models.Theatre;
-import java.time.LocalDate;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Scanner;
 
 public class ConsoleShowView {
-    private final Scanner scanner;
+    private final ConsoleInputUtil inputReader;
     private final IShowController showController;
     
     private boolean running;
     
     public ConsoleShowView(IShowController showController) {
-        this.scanner = new Scanner(System.in);
+        inputReader = new ConsoleInputUtil();
         this.showController = showController;
     }
     
@@ -41,12 +38,12 @@ public class ConsoleShowView {
     
     private AdminOperationsOption getAdminOperationsOption() {
         System.out.println("1. Add Show");
-        System.out.println("2. Update Show");
+        System.out.println("2. Update Show Timing");
         System.out.println("3. Remove Show");
         System.out.println("0. Exit");
         
         System.out.print("Enter Choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> AdminOperationsOption.ADD;
             case 2 -> AdminOperationsOption.UPDATE;
             case 3 -> AdminOperationsOption.DELETE;
@@ -57,29 +54,26 @@ public class ConsoleShowView {
     
     private void handleAddShow() {
         Theatre theatre = getTheatre();
+        if(theatre == null) return;
+        
         CinemaHall cinemaHall = getCinemaHall(theatre);
+        if(cinemaHall == null) return;
+        
         Movie movie = getMovie();
+        if(movie == null) return;
         
-        System.out.println("Start Time: ");
-        LocalDateTime startTime = getTime();
+        LocalDateTime[] showTime = getShowTime();
         
-        System.out.println("End Time: ");
-        LocalDateTime endTime = getTime();
-        
-        showController.addShow(movie, cinemaHall, theatre, startTime, endTime);
+        showController.addShow(movie, cinemaHall, theatre, showTime[0], showTime[1]);
     }
 
     private void handleUpdateShow() {
         Show show = getShow();
         if(show == null) return;
         
-        System.out.println("Updated Start Time: ");
-        LocalDateTime startTime = getTime();
+        LocalDateTime[] showTime = getShowTime();
         
-        System.out.println("Updated End Time: ");
-        LocalDateTime endTime = getTime();
-        
-        showController.updateShow(show, startTime, endTime);
+        showController.updateShow(show, showTime[0], showTime[1]);
     }
 
     private void handleDeleteShow() {
@@ -97,10 +91,6 @@ public class ConsoleShowView {
         displayError("Invalid Choice");
     }
     
-    private void displayError(String message) {
-        System.out.println("Error: " + message);
-    }
-    
     private Show getShow() {
         List<Show> showList = showController.getAllShows();
         for(int i = 0;i < showList.size();i++) {
@@ -111,78 +101,98 @@ public class ConsoleShowView {
                     + " Time: " + show.getStartTime() + "-" + show.getEndTime());
         }
         
-        System.out.print("Enter Movie Choice: ");
-        int movieChoice = scanner.nextInt();
-        
-        if(movieChoice < 1 || movieChoice > showList.size()) {
-            displayError("Invalid Movie Choice.");
-            return null;
+        while(true) {
+            int showChoice = inputReader.readInt("Enter Show Choice: ");
+
+            if(showChoice < 1 || showChoice > showList.size()) {
+                displayError("Invalid Show Choice.");
+                continue;
+            }
+
+            return showList.get(showChoice - 1);
         }
-        
-        return showList.get(movieChoice - 1);
     }
     
     private Movie getMovie() {
         List<Movie> movieList = showController.getAllMovies();
+        if(movieList.isEmpty()) {
+            System.out.println("No Movie found.");
+            return null;
+        }
+        
         for(int i = 0;i < movieList.size();i++) {
             System.out.println(i + 1 + ". " + movieList.get(i).getTitle());
         }
         
-        System.out.print("Enter Movie Choice: ");
-        int movieChoice = scanner.nextInt();
+        while(true) {
+            int movieChoice = inputReader.readInt("Enter Movie Choice: ");
         
-        if(movieChoice < 1 || movieChoice > movieList.size()) {
-            displayError("Invalid Movie Choice.");
-            return null;
+            if(movieChoice < 1 || movieChoice > movieList.size()) {
+                displayError("Invalid Movie Choice.");
+                continue;
+            }
+
+            return movieList.get(movieChoice - 1);
         }
-        
-        return movieList.get(movieChoice - 1);
     }
     
     private Theatre getTheatre() {
         List<Theatre> theatreList = showController.getAllTheatres();
+        if(theatreList.isEmpty()) {
+            System.out.println("No Theatre found.");
+            return null;
+        }
+        
         for(int i = 0;i < theatreList.size();i++) {
             System.out.println(i + 1 + ". " + theatreList.get(i).getName());
         }
         
-        System.out.print("Enter Theatre Choice: ");
-        int theatreChoice = scanner.nextInt();
-        
-        if(theatreChoice < 1 || theatreChoice > theatreList.size()) {
-            displayError("Invalid Theatre Choice.");
-            return null;
+        while(true) {
+            int theatreChoice = inputReader.readInt("Enter Theatre Choice: ");
+
+            if(theatreChoice < 1 || theatreChoice > theatreList.size()) {
+                displayError("Invalid Theatre Choice.");
+                continue;
+            }
+
+            return theatreList.get(theatreChoice - 1);
         }
-        
-        return theatreList.get(theatreChoice - 1);
     }
 
     private CinemaHall getCinemaHall(Theatre theatre) {
         List<CinemaHall> cinemaHallList = showController.getCinemaHalls(theatre);
+        if(cinemaHallList.isEmpty()) {
+            System.out.println("No Cinema Hall found.");
+            return null;
+        }
+        
         for(int i = 0;i < cinemaHallList.size();i++) {
             System.out.println(i + 1 + ". " + cinemaHallList.get(i).getName());
         }
         
-        System.out.print("Enter CinemaHall Choice: ");
-        int cinemaHallChoice = scanner.nextInt();
-        
-        if(cinemaHallChoice < 1 || cinemaHallChoice > cinemaHallList.size()) {
-            displayError("Invalid CinemaHall Choice.");
-            return null;
-        }
-        
-        return cinemaHallList.get(cinemaHallChoice - 1);
-    }
+        while(true) {
+            int cinemaHallChoice = inputReader.readInt("Enter Cinema Hall Choice: ");
 
-    private LocalDateTime getTime() {
-        try {
-            System.out.print("Enter Date: ");
-            LocalDate date = LocalDate.parse(scanner.nextLine());
-            System.out.print("Enter Time: ");
-            LocalTime time = LocalTime.parse(scanner.nextLine());
-            return LocalDateTime.of(date, time);
-        } catch(DateTimeParseException e) {
-            displayError("Invalid Date Format.");
+            if(cinemaHallChoice < 1 || cinemaHallChoice > cinemaHallList.size()) {
+                displayError("Invalid CinemaHall Choice.");
+                continue;
+            }
+
+            return cinemaHallList.get(cinemaHallChoice - 1);
         }
-        return null;
+    }
+    
+    private LocalDateTime[] getShowTime() {
+        while(true) {
+            LocalDateTime startTime = inputReader.readDateTime("Enter Start Time: ");
+            LocalDateTime endTime = inputReader.readDateTime("Enter End Time: ");
+            
+            if(startTime.isBefore(endTime)) return new LocalDateTime[] {startTime, endTime};
+            displayError("Start Time must be the time before End Time");
+        }
+    }
+    
+    private void displayError(String message) {
+        System.out.println("Error: " + message);
     }
 }

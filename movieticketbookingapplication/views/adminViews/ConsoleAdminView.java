@@ -1,18 +1,21 @@
 package com.mycompany.movieticketbookingapplication.views.adminViews;
 
-import com.mycompany.movieticketbookingapplication.controllers.interfaces.adminControllersInterfaces.IAdminController;
+import com.mycompany.movieticketbookingapplication.contexts.ApplicationContext;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.adminControllersImplementations.ShowController;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.adminControllersImplementations.TheatreController;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.adminControllersImplementations.MovieController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.adminMenuOptions.AdminMenuOption;
-import java.util.Scanner;
+import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
 
 public class ConsoleAdminView {
-    private final Scanner scanner;
-    private final IAdminController adminController;
+    private final ConsoleInputUtil inputReader;
+    private final ApplicationContext appContext;
     
     private boolean login;
     
-    public ConsoleAdminView(IAdminController adminController) {
-        this.scanner = new Scanner(System.in);
-        this.adminController = adminController;
+    public ConsoleAdminView() {
+        inputReader = new ConsoleInputUtil();
+        appContext = ApplicationContext.getInstance();
     }
     
     public void runAdminView() {
@@ -35,8 +38,7 @@ public class ConsoleAdminView {
         System.out.println("3. Manage Movies");
         System.out.println("0. Logout");
         
-        System.out.print("Enter choice: ");
-        return switch(scanner.nextInt()) {
+        return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> AdminMenuOption.MANAGE_THEATRES;
             case 2 -> AdminMenuOption.MANAGE_SHOWS;
             case 3 -> AdminMenuOption.MANAGE_MOVIES;
@@ -46,15 +48,18 @@ public class ConsoleAdminView {
     }
     
     private void handleManageTheatres() {
-        adminController.handleManageTheatres();
+        ConsoleTheatreView theatreView = new ConsoleTheatreView(new TheatreController(appContext.getTheatreRepository()));
+        theatreView.runTheatreView();
     }
 
     private void handleManageShows() {
-        adminController.handleManageShows();
+        ConsoleShowView showView = new ConsoleShowView(new ShowController(appContext.getShowRepository(), appContext.getMovieRepository(), appContext.getTheatreRepository()));
+        showView.runShowView();
     }
 
     private void handleManageMovies() {
-        adminController.handleManageMovies();
+        ConsoleMovieView movieView = new ConsoleMovieView(new MovieController(appContext.getMovieRepository()));
+        movieView.runMovieView();
     }
     
     private void handleLogout() {

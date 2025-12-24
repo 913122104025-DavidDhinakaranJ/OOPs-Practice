@@ -21,4 +21,9 @@ public class CinemaHallController implements ICinemaHallController {
     public List<CinemaHall> getCinemaHalls() {
         return theatre.getHalls();
     }
+
+    @Override
+    public void deleteCinemaHall(CinemaHall cinemaHall) {
+        theatre.removeHall(cinemaHall);
+    }
 }

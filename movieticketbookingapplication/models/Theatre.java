@@ -35,7 +35,7 @@ public class Theatre {
     }
 
     public List<CinemaHall> getHalls() {
-        return halls;
+        return new ArrayList<>(halls);
     }
 
     public void addHall(String cinemaHallName) {

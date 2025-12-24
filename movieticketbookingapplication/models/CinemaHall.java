@@ -33,7 +33,7 @@ public class CinemaHall {
     }
 
     public List<Seat> getSeats() {
-        return seats;
+        return new ArrayList<>(seats);
     }
     
     public void addSeat(String row, int seatNumber, SeatType type) {
@@ -41,12 +41,8 @@ public class CinemaHall {
         totalSeats++;
     }
     
-    public void removeSeat(String row, int seatNumber) {
-        for(Seat seat : seats) {
-            if(seat.getRow().equals(row) && seat.getSeatNumber() == seatNumber) {
-                seats.remove(seat);
-                return;
-            }
-        }
+    public void removeSeat(Seat seat) {
+        this.seats.remove(seat);
+        totalSeats--;
     }
 }

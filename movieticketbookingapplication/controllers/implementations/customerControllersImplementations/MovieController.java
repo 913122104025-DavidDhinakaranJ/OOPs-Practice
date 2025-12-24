@@ -3,19 +3,16 @@ package com.mycompany.movieticketbookingapplication.controllers.implementations.
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.IMovieController;
 import com.mycompany.movieticketbookingapplication.models.Movie;
 import com.mycompany.movieticketbookingapplication.models.Show;
-import com.mycompany.movieticketbookingapplication.models.users.Customer;
 import com.mycompany.movieticketbookingapplication.repositories.IShowRepository;
 import java.time.LocalDate;
 import java.util.List;
 
 public class MovieController implements IMovieController {
     private final Movie movie;
-    private final Customer customer;
     private final IShowRepository showRepository;
     
-    public MovieController(Customer customer, Movie movie, IShowRepository showRepository) {
+    public MovieController(Movie movie, IShowRepository showRepository) {
         this.movie = movie;
-        this.customer = customer;
         this.showRepository = showRepository;
     }
 

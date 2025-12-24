@@ -7,9 +7,10 @@ import com.mycompany.movieticketbookingapplication.enums.Rating;
 import com.mycompany.movieticketbookingapplication.models.Booking;
 import com.mycompany.movieticketbookingapplication.models.Movie;
 import com.mycompany.movieticketbookingapplication.models.Show;
+import com.mycompany.movieticketbookingapplication.models.Theatre;
 import java.util.List;
 
-public class InMemoryRepository implements IBookingRepository, IUserRepository, IMovieRepository, IShowRepository {
+public class InMemoryRepository implements IBookingRepository, IUserRepository, IMovieRepository, IShowRepository, ITheatreRepository {
 
     public static InMemoryRepository getInMemoryRepository() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -87,6 +88,21 @@ public class InMemoryRepository implements IBookingRepository, IUserRepository, 
 
     @Override
     public void deleteShow(Show show) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void addTheatre(Theatre theatre) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void deleteTheatre(Theatre theatre) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Theatre> getAllTheatres() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

@@ -60,7 +60,15 @@ public class Show {
         return cinemaHall;
     }
 
-    public List<ShowSeat> getShowSeats() {
-        return showSeats;
+    public List<ShowSeat> getAvailableSeats() {
+        List<ShowSeat> availableSeats = new ArrayList<>();
+        
+        for(ShowSeat seat : showSeats) {
+            if(seat.isAvailable()) {
+                availableSeats.add(seat);
+            }
+        }
+        
+        return availableSeats;
     }
 }

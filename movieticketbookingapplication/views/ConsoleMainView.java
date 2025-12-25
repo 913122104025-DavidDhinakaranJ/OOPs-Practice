@@ -75,6 +75,7 @@ public class ConsoleMainView {
                 adminView.runAdminView();
             }
         }
+        appContext.getSessionContext().logout();
     }
 
     private void handleSearch() {

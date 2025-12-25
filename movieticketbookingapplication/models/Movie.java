@@ -5,7 +5,7 @@ import com.mycompany.movieticketbookingapplication.enums.Language;
 import com.mycompany.movieticketbookingapplication.enums.Rating;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,8 +24,8 @@ public class Movie {
     public Movie(String title, Rating rating) {
         this.movieId = "MOV" + idCounter.incrementAndGet();
         this.title = title;
-        this.genres = new HashSet<>();
-        this.languages = new HashSet<>();
+        this.genres = EnumSet.noneOf(Genre.class);
+        this.languages = EnumSet.noneOf(Language.class);
         this.rating = rating;
     }
 

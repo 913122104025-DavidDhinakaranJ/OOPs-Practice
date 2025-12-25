@@ -23,8 +23,8 @@ public class ShowController implements IShowController {
     }
 
     @Override
-    public void addShow(Movie movie, CinemaHall cinemaHall, Theatre theatre, LocalDateTime startTime, LocalDateTime endTime) {
-        Show show = new Show(movie, cinemaHall, theatre);
+    public void addShow(Movie movie, CinemaHall cinemaHall, Theatre theatre, LocalDateTime startTime, LocalDateTime endTime, double basePrice) {
+        Show show = new Show(movie, cinemaHall, theatre, basePrice);
         
         show.setStartTime(startTime);
         show.setEndTime(endTime);

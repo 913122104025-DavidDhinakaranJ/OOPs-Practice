@@ -63,6 +63,7 @@ public class ConsoleMovieView {
         LocalDate date = getReleaseDate();
         
         movieController.addMovie(title, genres, languages, rating, duration, date);
+        System.out.println("Movie added successfully.");
     }
 
     private void handleUpdateMovie() {
@@ -104,6 +105,7 @@ public class ConsoleMovieView {
         }
         
         String genresChoice = inputReader.readString("Enter Genre Choices (Space Seperated): ");
+        if(genresChoice.isBlank()) return new HashSet<>();
         
         Set<Genre> genreList = new HashSet<>();
         for(String choice : genresChoice.trim().split("\\s+")) {
@@ -128,6 +130,7 @@ public class ConsoleMovieView {
         }
         
         String languagesChoice = inputReader.readString("Enter Langauge Choices (Space Seperated): ");
+        if(languagesChoice.isBlank()) return new HashSet<>();
         
         Set<Language> languageList = new HashSet<>();
         for(String choice : languagesChoice.split(" ")) {
@@ -169,7 +172,7 @@ public class ConsoleMovieView {
     }
     
     private LocalDate getReleaseDate() {
-        return inputReader.readDate("Enter Movie Release Date: ");
+        return inputReader.readDate("Enter Movie Release Date");
     }
     
     private MovieUpdateOption getMovieUpdateOption() {
@@ -218,6 +221,8 @@ public class ConsoleMovieView {
         Set<Genre> removeGenres = getGenres(movie.getGenres().toArray(Genre[]::new));
         
         movieController.updateMovieGenres(movie, addGenres, removeGenres);
+        
+        System.out.println("Genres updated Successfully.");
     }
 
     private void handleUpdateLanguages(Movie movie) {
@@ -228,16 +233,22 @@ public class ConsoleMovieView {
         Set<Language> removeLanguages = getLanguages(movie.getLanguages().toArray(Language[]::new));
         
         movieController.updateMovieLanguages(movie, addLanguages, removeLanguages);
+        
+        System.out.println("Languages updated Successfully.");
     }
 
     private void handleUpdateDuration(Movie movie) {
         int duration = getDuration();
         movieController.updateMovieDuration(movie, duration);
+        
+        System.out.println("Duration updated Successfully.");
     }
 
     private void handleUpdateReleaseDate(Movie movie) {
         LocalDate date = getReleaseDate();
         movieController.updateMovieReleaseDate(movie, date);
+        
+        System.out.println("Release Date updated Successfully.");
     }
     
     private void displayError(String message) {

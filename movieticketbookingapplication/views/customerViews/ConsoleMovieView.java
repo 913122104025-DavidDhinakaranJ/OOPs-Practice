@@ -1,5 +1,6 @@
 package com.mycompany.movieticketbookingapplication.views.customerViews;
 
+import com.mycompany.movieticketbookingapplication.contexts.ApplicationContext;
 import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.ShowController;
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.IMovieController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.customerMenuOptions.MovieMenuOption;
@@ -10,12 +11,14 @@ import java.util.List;
 public class ConsoleMovieView {
     private final ConsoleInputUtil inputReader;
     private final IMovieController movieController;
+    private final ApplicationContext appContext;
 
     private boolean running;
 
     public ConsoleMovieView(IMovieController movieController) {
         inputReader = new ConsoleInputUtil();
         this.movieController = movieController;
+        this.appContext = ApplicationContext.getInstance();
     }
 
     public void runMovieView() {
@@ -55,6 +58,11 @@ public class ConsoleMovieView {
 
     private void handleViewShows() {
         List<Show> shows = movieController.getShows();
+        
+        if(shows == null) {
+            System.out.print("No Shows Found.");
+            return;
+        }
         displayShows(shows);
         handleShowListSelection(shows);
     }
@@ -71,7 +79,7 @@ public class ConsoleMovieView {
         Show show = getShowChoice(shows);
         if(show == null) return;
         
-        ConsoleShowView showView = new ConsoleShowView(new ShowController(show));
+        ConsoleShowView showView = new ConsoleShowView(new ShowController(show, appContext.getBookingRepository()));
         showView.runShowView();
     }
     
@@ -79,8 +87,8 @@ public class ConsoleMovieView {
         for(int i = 0;i < shows.size();i++) {
             Show show = shows.get(i);
             System.out.println(i + 1 + ". Theatre: " + show.getTheatre().getName() 
-                    + "Cinema Hall: " + show.getCinemaHall().getName()
-                    + "Timing: " + show.getStartTime() + " to " + show.getEndTime());
+                    + "\tCinema Hall: " + show.getCinemaHall().getName()
+                    + "\tTiming: " + show.getStartTime() + " to " + show.getEndTime());
         }
     }
     

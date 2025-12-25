@@ -15,12 +15,14 @@ public class Show {
     private final Theatre theatre;
     private final CinemaHall cinemaHall;
     private final List<ShowSeat> showSeats;
+    private final double basePrice;
     
-    public Show(Movie movie, CinemaHall cinemaHall, Theatre theatre) {
+    public Show(Movie movie, CinemaHall cinemaHall, Theatre theatre, double basePrice) {
         this.showId = "SHOW" + idCounter.incrementAndGet();
         this.movie = movie;
         this.cinemaHall = cinemaHall;
         this.theatre = theatre;
+        this.basePrice = basePrice;
         
         this.showSeats = new ArrayList<>();
         cinemaHall.getSeats().forEach(seat -> {
@@ -70,5 +72,9 @@ public class Show {
         }
         
         return availableSeats;
+    }
+    
+    public double getPrice() {
+        return basePrice;
     }
 }

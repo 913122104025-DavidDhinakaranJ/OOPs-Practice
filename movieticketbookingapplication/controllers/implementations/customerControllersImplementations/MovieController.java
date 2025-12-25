@@ -23,7 +23,7 @@ public class MovieController implements IMovieController {
 
     @Override
     public String[] getGenres() {
-        return movie.getGenres().stream().toArray(String[]::new);
+        return movie.getGenres().stream().map(Enum::name).toArray(String[]::new);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class MovieController implements IMovieController {
 
     @Override
     public String[] getLanguages() {
-        return movie.getLanguages().stream().toArray(String[]::new);
+        return movie.getLanguages().stream().map(Enum::name).toArray(String[]::new);
     }
 
     @Override

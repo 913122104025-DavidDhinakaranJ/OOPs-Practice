@@ -1,15 +1,13 @@
 package com.mycompany.movieticketbookingapplication.views.customerViews;
 
 import com.mycompany.movieticketbookingapplication.contexts.ApplicationContext;
+import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.BookingController;
 import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.SearchController;
 import com.mycompany.movieticketbookingapplication.controllers.interfaces.customerControllersInterfaces.ICustomerController;
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.customerMenuOptions.CustomerMenuOption;
 import com.mycompany.movieticketbookingapplication.models.Booking;
-import com.mycompany.movieticketbookingapplication.models.Seat;
 import com.mycompany.movieticketbookingapplication.models.Show;
-import com.mycompany.movieticketbookingapplication.models.ShowSeat;
 import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConsoleCustomerView {
@@ -63,6 +61,7 @@ public class ConsoleCustomerView {
         } else {
             System.out.println("My Bookings:");
             displayBookHistory(bookings);
+            handleBookingSelection(bookings);
         }
     }
 
@@ -79,22 +78,42 @@ public class ConsoleCustomerView {
     private void displayError(String message) {
         System.out.println("Error: " + message);
     }
-
+    
     private void displayBookHistory(List<Booking> bookings) {
+        int i = 1;
         for(Booking booking : bookings) {
-            List<String> seats = new ArrayList<>();
-            for(ShowSeat showSeat : booking.getSeats()) {
-                Seat seat = showSeat.getSeat();
-                seats.add(seat.getRow() + seat.getSeatNumber() + " - " + seat.getSeatType());
-            }
-            
             Show show = booking.getShow();
-            System.out.println("Date:" + booking.getBookingDate().toString()
-                    + " Movie: " + show.getMovie().getTitle()
-                    + " Theatre: " + show.getTheatre().getName()
-                    + " Cinema Hall: " + show.getCinemaHall().getName()
-                    + " Seats: " + String.join(", ", seats) 
-                    + " Status: " + booking.getBookingStatus());
+            System.out.println(i + ". Date:" + booking.getBookingDate().toString()
+                    + "\tMovie: " + show.getMovie().getTitle()
+                    + "\tTheatre: " + show.getTheatre().getName()
+                    + "\tStatus: " + booking.getBookingStatus());
+            i++;
+        }
+    }
+
+    private void handleBookingSelection(List<Booking> bookings) {
+        Booking booking = getBookingChoice(bookings);
+        if(booking == null) return;
+        
+        ConsoleBookingView bookingView = new ConsoleBookingView(new BookingController(booking));
+        bookingView.runBookingView();
+    }
+    
+    private Booking getBookingChoice(List<Booking> bookings) {
+        System.out.println("0. Back");
+        int bookingChoice = inputReader.readInt("Enter Booking Choice: ");
+        
+        if(bookingChoice == 0) {
+            return null;
+        }
+        
+        while(true) {
+            if(bookingChoice < 1 || bookingChoice > bookings.size()) {
+                displayError("Invalid Booking Choice.");
+                continue;
+            }
+
+            return bookings.get(bookingChoice - 1);
         }
     }
 }

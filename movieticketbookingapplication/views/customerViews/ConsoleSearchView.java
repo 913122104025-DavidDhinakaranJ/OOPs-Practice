@@ -61,6 +61,11 @@ public class ConsoleSearchView {
         
         List<Movie> movies = searchController.getMovies(title);
         
+        if(movies.isEmpty()) {
+            System.out.println("No movies found");
+            return;
+        }
+        
         displayMovies(movies);
         handleMoviesListSelection(movies);
     }
@@ -70,6 +75,11 @@ public class ConsoleSearchView {
         if(genre == null) return;
         
         List<Movie> movies = searchController.getMovies(genre);
+        
+        if(movies.isEmpty()) {
+            System.out.println("No movies found");
+            return;
+        }
         
         displayMovies(movies);
         handleMoviesListSelection(movies);
@@ -81,6 +91,11 @@ public class ConsoleSearchView {
         
         List<Movie> movies = searchController.getMovies(language);
         
+        if(movies.isEmpty()) {
+            System.out.println("No movies found");
+            return;
+        }
+        
         displayMovies(movies);
         handleMoviesListSelection(movies); 
     }
@@ -90,6 +105,11 @@ public class ConsoleSearchView {
         if(rating == null) return;
         
         List<Movie> movies = searchController.getMovies(rating);
+        
+        if(movies.isEmpty()) {
+            System.out.println("No movies found");
+            return;
+        }
         
         displayMovies(movies);
         handleMoviesListSelection(movies);
@@ -113,11 +133,6 @@ public class ConsoleSearchView {
     }
     
     private void displayMovies(List<Movie> movies) {
-        if(movies.isEmpty()) {
-            System.out.println("No movies found");
-            return;
-        }
-        
         for(int i = 0;i < movies.size();i++) {
             System.out.println(i + 1 + ". " + movies.get(i).getTitle());
         }

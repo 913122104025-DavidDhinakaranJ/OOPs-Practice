@@ -43,6 +43,6 @@ public class Theatre {
     }
     
     public void removeHall(CinemaHall cinemaHall) {
-        this.halls.remove(cinemaHall);
+        halls.remove(cinemaHall);
     }
 }

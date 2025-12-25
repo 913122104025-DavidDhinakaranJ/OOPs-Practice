@@ -8,102 +8,159 @@ import com.mycompany.movieticketbookingapplication.models.Booking;
 import com.mycompany.movieticketbookingapplication.models.Movie;
 import com.mycompany.movieticketbookingapplication.models.Show;
 import com.mycompany.movieticketbookingapplication.models.Theatre;
+import com.mycompany.movieticketbookingapplication.models.users.Admin;
+import com.mycompany.movieticketbookingapplication.models.users.User;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryRepository implements IBookingRepository, IUserRepository, IMovieRepository, IShowRepository, ITheatreRepository {
+    private static InMemoryRepository instance;
+    
+    private final Map<String, User> users;
+    private final List<Booking> bookings;
+    private final List<Movie> movies;
+    private final List<Show> shows;
+    private final List<Theatre> theatres;
+    
+    private InMemoryRepository() {
+        this.users = new HashMap<>();
+        this.bookings = new ArrayList<>();
+        this.movies = new ArrayList<>();
+        this.shows = new ArrayList<>();
+        this.theatres = new ArrayList<>();
+        
+        Admin admin = new Admin("admin", "Admin@1234");
+        users.put(admin.getUsername(), admin);
+    }
 
     public static InMemoryRepository getInMemoryRepository() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if(instance == null) {
+            instance = new InMemoryRepository();
+        }
+        return instance;
     }
 
     @Override
     public void saveBooking(Booking booking) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        bookings.add(booking);
     }
 
     @Override
     public void saveUser(AuthenticatableUser user) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        users.put(user.getUsername(), (User) user);
     }
 
     @Override
     public AuthenticatableUser findUser(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return users.get(username);
     }
 
     @Override
     public boolean isUsernameTaken(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Movie> getMovies(String title) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Movie> getMovies(Genre genre) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Movie> getMovies(Language language) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Movie> getMovies(Rating rating) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Show> getShows(Movie movie) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void addMovie(Movie movie) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return users.containsKey(username);
     }
 
     @Override
     public List<Movie> getAllMovies() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return new ArrayList<>(movies);
+    }
+
+    @Override
+    public List<Movie> getMovies(String title) {
+        List<Movie> movieList = new ArrayList<>();
+        for(Movie movie : movies) {
+            if(movie.getTitle().toLowerCase().contains(title.toLowerCase())) {
+                movieList.add(movie);
+            }
+        }
+        return movieList;
+    }
+
+
+    @Override
+    public List<Movie> getMovies(Genre genre) {
+        List<Movie> movieList = new ArrayList<>();
+        for(Movie movie : movies) {
+            if(movie.getGenres().contains(genre)) {
+                movieList.add(movie);
+            }
+        }
+        return movieList;
+    }
+
+    @Override
+    public List<Movie> getMovies(Language language) {
+        List<Movie> movieList = new ArrayList<>();
+        for(Movie movie : movies) {
+            if(movie.getLanguages().contains(language)) {
+                movieList.add(movie);
+            }
+        }
+        return movieList;
+    }
+
+    @Override
+    public List<Movie> getMovies(Rating rating) {
+        List<Movie> movieList = new ArrayList<>();
+        for(Movie movie : movies) {
+            if(movie.getRating().equals(rating)) {
+                movieList.add(movie);
+            }
+        }
+        return movieList;
+    }
+
+    @Override
+    public void addMovie(Movie movie) {
+        movies.add(movie);
     }
 
     @Override
     public void deleteMovie(Movie movie) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        movies.remove(movie);
     }
 
     @Override
     public void addShow(Show show) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Show> getAllShows() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        shows.add(show);
     }
 
     @Override
     public void deleteShow(Show show) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        shows.remove(show);
+    }
+
+    @Override
+    public List<Show> getShows(Movie movie) {
+        List<Show> showList = new ArrayList<>();
+        for(Show show : shows) {
+            if(show.getMovie().equals(movie)) {
+                showList.add(show);
+            }
+        }
+        return showList;
+    }
+
+    @Override
+    public List<Show> getAllShows() {
+        return new ArrayList<>(shows);
     }
 
     @Override
     public void addTheatre(Theatre theatre) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        theatres.add(theatre);
     }
 
     @Override
     public void deleteTheatre(Theatre theatre) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        theatres.remove(theatre);
     }
 
     @Override
     public List<Theatre> getAllTheatres() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return new ArrayList<>(theatres);
     }
     
 }

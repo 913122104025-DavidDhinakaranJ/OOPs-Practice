@@ -15,7 +15,9 @@ public class Booking {
     private BookingStatus status;
     private final Customer customer;
     private final Show show;
-    private final List<ShowSeat> seats;    
+    private final List<ShowSeat> seats;
+    private double totalPrice;
+    private final Payment payment;
     
     public Booking(Customer customer, Show show, List<ShowSeat> seats) {
         this.bookingId = "BOOK" + idCounter.incrementAndGet();
@@ -24,6 +26,13 @@ public class Booking {
         this.customer = customer;
         this.show = show;
         this.seats = seats;
+        this.totalPrice = 0.0;
+        
+        double basePrice = show.getPrice();
+        for(ShowSeat seat : seats) {
+            totalPrice += basePrice * seat.getSeat().getSeatType().getPriceMultiplier();
+        }
+        this.payment = new Payment();
     }
 
     public LocalDateTime getBookingDate() {
@@ -62,5 +71,13 @@ public class Booking {
 
     public List<ShowSeat> getSeats() {
         return new ArrayList<>(seats);
+    }
+    
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+    
+    public Payment getPayment() {
+        return payment;
     }
 }

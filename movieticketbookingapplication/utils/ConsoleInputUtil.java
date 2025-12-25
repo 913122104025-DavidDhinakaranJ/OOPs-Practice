@@ -17,7 +17,9 @@ public class ConsoleInputUtil {
         while(true) {
             System.out.print(prompt);
             try {
-                return Integer.parseInt(scanner.next());
+                int input = Integer.parseInt(scanner.next());
+                scanner.nextLine();
+                return input;
             } catch (NumberFormatException e) {
                 displayError("Please enter a valid integer.");
             }
@@ -55,6 +57,36 @@ public class ConsoleInputUtil {
                 return LocalDateTime.parse(input, formatter);
             } catch (DateTimeParseException e) {
                 displayError("Invalid date-time.");
+            }
+        }
+    }
+    
+    public double readAmount(String prompt) {
+        while(true) {
+            System.out.print(prompt);
+            try {
+                double amount = Double.parseDouble(scanner.nextLine().trim());
+                if(amount > 0) return amount;
+                displayError("Amount must be greater than Zero.");
+            } catch (NumberFormatException e) {
+                displayError("Please enter a valid amount.");
+            }
+        }
+    }
+    
+    public boolean readBoolean(String prompt) {
+        while (true) {
+            System.out.print(prompt + " (yes/no): ");
+            String input = scanner.next().trim().toLowerCase();
+
+            switch (input) {
+                case "yes" -> {
+                    return true;
+                }
+                case "no" -> {
+                    return false;
+                }
+                default -> System.out.println("Error: Please enter yes/no or y/n.");
             }
         }
     }

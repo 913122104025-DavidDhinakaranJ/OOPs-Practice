@@ -42,7 +42,6 @@ public class ConsoleShowView {
         System.out.println("3. Remove Show");
         System.out.println("0. Exit");
         
-        System.out.print("Enter Choice: ");
         return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> AdminOperationsOption.ADD;
             case 2 -> AdminOperationsOption.UPDATE;
@@ -64,7 +63,9 @@ public class ConsoleShowView {
         
         LocalDateTime[] showTime = getShowTime();
         
-        showController.addShow(movie, cinemaHall, theatre, showTime[0], showTime[1]);
+        double basePrice = getBasePrice();
+        
+        showController.addShow(movie, cinemaHall, theatre, showTime[0], showTime[1], basePrice);
     }
 
     private void handleUpdateShow() {
@@ -96,9 +97,9 @@ public class ConsoleShowView {
         for(int i = 0;i < showList.size();i++) {
             Show show = showList.get(i);
             System.out.println(i + 1 + ". Theatre: " + show.getTheatre().getName()
-                    + " Cinema Hall: " + show.getCinemaHall().getName()
-                    + " Movie: " + show.getMovie().getTitle()
-                    + " Time: " + show.getStartTime() + "-" + show.getEndTime());
+                    + "\tCinema Hall: " + show.getCinemaHall().getName()
+                    + "\tMovie: " + show.getMovie().getTitle()
+                    + "\tTime: " + show.getStartTime().toString() + " - " + show.getEndTime().toString());
         }
         
         while(true) {
@@ -190,6 +191,10 @@ public class ConsoleShowView {
             if(startTime.isBefore(endTime)) return new LocalDateTime[] {startTime, endTime};
             displayError("Start Time must be the time before End Time");
         }
+    }
+    
+    private double getBasePrice() {
+        return inputReader.readAmount("Enter Base Price: ");
     }
     
     private void displayError(String message) {

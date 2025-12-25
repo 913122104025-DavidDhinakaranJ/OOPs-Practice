@@ -7,7 +7,6 @@ public class ShowSeat {
     private final Seat seat;
     private final Show show;
     private SeatStatus status;
-    private double price;
     
     public ShowSeat(String showSeatId, Seat seat, Show show) {
         this.showSeatId = showSeatId;
@@ -38,13 +37,5 @@ public class ShowSeat {
     
     public void cancelSeat() {
         this.status = SeatStatus.AVAILABLE;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 }

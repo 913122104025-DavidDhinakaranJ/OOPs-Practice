@@ -58,6 +58,7 @@ public class ConsoleCinemaHallView {
         if(cinemaHall == null) return;
         
         ConsoleSeatView seatView = new ConsoleSeatView(new SeatController(cinemaHall));
+        seatView.runSeatView();
     }
 
     private void handleDeleteCinemaHall() {

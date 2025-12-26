@@ -8,7 +8,7 @@ public class AdminFactory implements AuthenticatableUserFactory {
 
     @Override
     public AuthenticatableUser createUser(String username, String password) {
-        return new Admin(username, password);
+        return new Admin(username, password, false);
     }
     
 }

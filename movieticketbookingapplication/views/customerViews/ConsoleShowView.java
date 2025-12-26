@@ -6,6 +6,7 @@ import com.mycompany.movieticketbookingapplication.controllers.interfaces.custom
 import com.mycompany.movieticketbookingapplication.enums.menuOptions.customerMenuOptions.ShowMenuOption;
 import com.mycompany.movieticketbookingapplication.models.Booking;
 import com.mycompany.movieticketbookingapplication.models.Seat;
+import com.mycompany.movieticketbookingapplication.models.Show;
 import com.mycompany.movieticketbookingapplication.models.ShowSeat;
 import com.mycompany.movieticketbookingapplication.models.users.Customer;
 import com.mycompany.movieticketbookingapplication.utils.ConsoleInputUtil;
@@ -53,14 +54,15 @@ public class ConsoleShowView {
     }
 
     private void handleViewDetails() {
-        System.out.println("Movie: " + showController.getMovie());
-        System.out.println("Theatre: " + showController.getTheatre());
-        System.out.println("Cinema Hall: " + showController.getCinemaHall());
-        System.out.println("Starting Time: " + showController.getStartingTime());
-        System.out.println("Ending Time: " + showController.getEndingTime());
-        System.out.println("Base Price: " + showController.getBasePrice());
+        Show show = showController.getShow();
+        System.out.println("Movie: " + show.getMovie().getTitle());
+        System.out.println("Theatre: " + show.getTheatre().getName());
+        System.out.println("Cinema Hall: " + show.getCinemaHall().getName());
+        System.out.println("Starting Time: " + inputReader.formatDateTime(show.getStartTime()));
+        System.out.println("Ending Time: " + inputReader.formatDateTime(show.getEndTime()));
+        System.out.println("Base Price: " + show.getPrice());
         System.out.println("Available Seats: ");
-        List<ShowSeat> availableSeats = showController.getAvailableSeats();
+        List<ShowSeat> availableSeats = show.getAvailableSeats();
         int seatCount = 0;
         for(ShowSeat showSeat : availableSeats) {
             Seat seat = showSeat.getSeat();
@@ -89,8 +91,16 @@ public class ConsoleShowView {
         }
         
         int wantedSeatCount = inputReader.readInt("Enter number of seats that you want to book: ");
+        
+        if(wantedSeatCount <= 0) {
+            displayError("Number of seats must be positive value.");
+            return;
+        }
             
-        if(wantedSeatCount > availableSeatCount) displayError("There is not enough available seats to book.");
+        if(wantedSeatCount > availableSeatCount) {
+            displayError("There is not enough available seats to book.");
+            return;
+        }
         
         Set<ShowSeat> selectedSeats = new HashSet<>();
         for(int i = 0;i < wantedSeatCount;) {

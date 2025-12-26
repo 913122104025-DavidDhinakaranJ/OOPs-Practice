@@ -90,6 +90,11 @@ public class ConsoleInputUtil {
             }
         }
     }
+    
+    public String formatDateTime(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
+        return dateTime.format(formatter);
+    }
 
     private void displayError(String message) {
         System.out.println("Error: " + message);

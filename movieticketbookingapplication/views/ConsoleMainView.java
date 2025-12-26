@@ -64,6 +64,11 @@ public class ConsoleMainView {
         User user = (User) authView.handleLogin();
         if(user == null) return;
         
+        if(user.isBlocked()) {
+            displayError("Your account is blocked.");
+            return;
+        }
+        
         appContext.getSessionContext().login(user);
         switch(user.getRole()) {
             case CUSTOMER -> {

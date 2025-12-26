@@ -4,11 +4,13 @@ import com.mycompany.authlib.users.AuthenticatableUser;
 import com.mycompany.movieticketbookingapplication.enums.Genre;
 import com.mycompany.movieticketbookingapplication.enums.Language;
 import com.mycompany.movieticketbookingapplication.enums.Rating;
+import com.mycompany.movieticketbookingapplication.enums.Role;
 import com.mycompany.movieticketbookingapplication.models.Booking;
 import com.mycompany.movieticketbookingapplication.models.Movie;
 import com.mycompany.movieticketbookingapplication.models.Show;
 import com.mycompany.movieticketbookingapplication.models.Theatre;
 import com.mycompany.movieticketbookingapplication.models.users.Admin;
+import com.mycompany.movieticketbookingapplication.models.users.Customer;
 import com.mycompany.movieticketbookingapplication.models.users.User;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +32,6 @@ public class InMemoryRepository implements IBookingRepository, IUserRepository, 
         this.movies = new ArrayList<>();
         this.shows = new ArrayList<>();
         this.theatres = new ArrayList<>();
-        
-        Admin admin = new Admin("admin", "Admin@1234");
-        users.put(admin.getUsername(), admin);
     }
 
     public static InMemoryRepository getInMemoryRepository() {
@@ -161,6 +160,82 @@ public class InMemoryRepository implements IBookingRepository, IUserRepository, 
     @Override
     public List<Theatre> getAllTheatres() {
         return new ArrayList<>(theatres);
+    }
+
+    @Override
+    public List<String> getNonBlockedCustomers() {
+        List<String> nonBlockedCustomers = new ArrayList<>();
+        for(Customer customer : getAllCustomers()) {
+            if(!customer.isBlocked()) {
+                nonBlockedCustomers.add(customer.getUsername());
+            }
+        }
+        
+        return nonBlockedCustomers;
+    }
+
+    @Override
+    public List<String> getBlockedCustomers() {
+        List<String> blockedCustomers = new ArrayList<>();
+        for(Customer customer : getAllCustomers()) {
+            if(customer.isBlocked()) {
+                blockedCustomers.add(customer.getUsername());
+            }
+        }
+        
+        return blockedCustomers;
+    }
+
+    @Override
+    public List<String> getNonBlockedAdmins() {
+        List<String> nonBlockedAdmins = new ArrayList<>();
+        for(Admin admin : getAllAdmins()) {
+            if(!admin.isBlocked()) {
+                nonBlockedAdmins.add(admin.getUsername());
+            }
+        }
+        
+        return nonBlockedAdmins;
+    }
+
+    @Override
+    public List<String> getBlockedAdmins() {
+        List<String> blockedAdmins = new ArrayList<>();
+        for(Admin admin : getAllAdmins()) {
+            if(admin.isBlocked()) {
+                blockedAdmins.add(admin.getUsername());
+            }
+        }
+        
+        return blockedAdmins;
+    }
+
+    @Override
+    public User getUser(String username) {
+        return users.get(username);
+    }
+    
+    private List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        for(User user : users.values()) {
+            if(user.getRole().equals(Role.CUSTOMER)) {
+                customers.add((Customer) user);
+            }
+        }
+        
+        return customers;
+    }
+    
+    @Override
+    public List<Admin> getAllAdmins() {
+        List<Admin> admins = new ArrayList<>();
+        for(User user : users.values()) {
+            if(user.getRole().equals(Role.ADMIN)) {
+                admins.add((Admin) user);
+            }
+        }
+        
+        return admins;
     }
     
 }

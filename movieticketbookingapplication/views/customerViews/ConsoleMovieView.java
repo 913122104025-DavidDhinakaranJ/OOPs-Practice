@@ -88,7 +88,7 @@ public class ConsoleMovieView {
             Show show = shows.get(i);
             System.out.println(i + 1 + ". Theatre: " + show.getTheatre().getName() 
                     + "\tCinema Hall: " + show.getCinemaHall().getName()
-                    + "\tTiming: " + show.getStartTime() + " to " + show.getEndTime());
+                    + "\tTiming: " + inputReader.formatDateTime(show.getStartTime()) + " to " + inputReader.formatDateTime(show.getEndTime()));
         }
     }
     

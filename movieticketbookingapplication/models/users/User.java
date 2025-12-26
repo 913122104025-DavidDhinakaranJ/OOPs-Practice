@@ -8,12 +8,14 @@ public abstract class User implements AuthenticatableUser {
     private final String password;
     private final String userId;
     private final Role role;
+    private boolean isBlocked;
 
     public User(String username, String password, String userId, Role role) {
         this.username = username;
         this.password = password;
         this.userId = userId;
         this.role = role;
+        this.isBlocked = false;
     }
     
     @Override
@@ -32,5 +34,17 @@ public abstract class User implements AuthenticatableUser {
     
     public Role getRole() {
         return this.role;
+    }
+    
+    public void blockUser() {
+        isBlocked = true;
+    }
+    
+    public void unblockUser() {
+        isBlocked = false;
+    }
+    
+    public boolean isBlocked() {
+        return isBlocked;
     }
 }

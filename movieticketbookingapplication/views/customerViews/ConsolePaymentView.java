@@ -14,15 +14,15 @@ public class ConsolePaymentView {
     
     public boolean handlePayment(double amount) {
         displayAmountToPay(amount);
-        return processpayment(amount);
+        return processpayment();
     }
     
     private void displayAmountToPay(double amount) {
         System.out.println("Amount to pay: " + amount);
     }
 
-    private boolean processpayment(double amount) {
-        if(!inputReader.readBoolean("Do you want to continue to payment?")) {
+    private boolean processpayment() {
+        if(!inputReader.readBoolean("Do you want to pay?")) {
             System.out.println("Payment Cancelled.");
             payment.updateStatusToFailed();
             return false;

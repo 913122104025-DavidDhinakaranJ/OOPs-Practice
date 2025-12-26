@@ -17,31 +17,11 @@ public class ShowController implements IShowController {
         this.bookingRepository = bookingRepository;
     } 
 
-    @Override
-    public String getMovie() {
-        return show.getMovie().getTitle();
+   @Override
+    public Show getShow() {
+        return show;
     }
-
-    @Override
-    public String getTheatre() {
-        return show.getTheatre().getName();
-    }
-
-    @Override
-    public String getCinemaHall() {
-        return show.getCinemaHall().getName();
-    }
-
-    @Override
-    public String getStartingTime() {
-        return show.getStartTime().toString();
-    }
-
-    @Override
-    public String getEndingTime() {
-        return show.getEndTime().toString();
-    }
-
+    
     @Override
     public List<ShowSeat> getAvailableSeats() {
         return show.getAvailableSeats();
@@ -53,10 +33,5 @@ public class ShowController implements IShowController {
         bookingRepository.saveBooking(booking);
         customer.addBooking(booking);
         return booking;
-    }
-
-    @Override
-    public double getBasePrice() {
-        return show.getPrice();
     }
 }

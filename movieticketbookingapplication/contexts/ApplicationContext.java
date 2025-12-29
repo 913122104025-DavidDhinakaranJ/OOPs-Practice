@@ -12,7 +12,7 @@ import com.mycompany.movieticketbookingapplication.repositories.IUserRepository;
 import com.mycompany.movieticketbookingapplication.repositories.InMemoryRepository;
 
 public class ApplicationContext {
-
+    
     private static final ApplicationContext instance = new ApplicationContext();
     
     private final IUserRepository userRepository;
@@ -67,7 +67,7 @@ public class ApplicationContext {
     public ITheatreRepository getTheatreRepository() {
         return theatreRepository;
     }
-
+    
     public AuthenticatableUserFactory getCustomerFactory() {
         return customerFactory;
     }

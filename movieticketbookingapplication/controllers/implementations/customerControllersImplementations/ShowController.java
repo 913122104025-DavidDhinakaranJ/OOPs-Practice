@@ -6,6 +6,7 @@ import com.mycompany.movieticketbookingapplication.models.Show;
 import com.mycompany.movieticketbookingapplication.models.ShowSeat;
 import com.mycompany.movieticketbookingapplication.models.users.Customer;
 import com.mycompany.movieticketbookingapplication.repositories.IBookingRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ShowController implements IShowController {
@@ -20,6 +21,11 @@ public class ShowController implements IShowController {
    @Override
     public Show getShow() {
         return show;
+    }
+    
+    @Override
+    public boolean isShowStarted() {
+        return show.getStartTime().isBefore(LocalDateTime.now());
     }
     
     @Override

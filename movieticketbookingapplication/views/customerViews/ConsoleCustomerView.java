@@ -1,5 +1,6 @@
 package com.mycompany.movieticketbookingapplication.views.customerViews;
 
+import com.mycompany.authlib.util.ConsoleAuthInputUtil;
 import com.mycompany.movieticketbookingapplication.contexts.ApplicationContext;
 import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.BookingController;
 import com.mycompany.movieticketbookingapplication.controllers.implementations.customerControllersImplementations.SearchController;
@@ -30,6 +31,7 @@ public class ConsoleCustomerView {
             switch(choice) {
                 case SEARCH_MOVIE -> handleSearchMovie();
                 case VIEW_BOOKING_HISTORY -> handleViewBookHistory();
+                case CHANGE_PASSWORD -> handleChangePassword();
                 case LOGOUT -> handleLogout();
                 case INVALID -> handleInvalidChoice();
             }
@@ -39,11 +41,13 @@ public class ConsoleCustomerView {
     private CustomerMenuOption getCustomerMenuOption() {
         System.out.println("1. Search Movie");
         System.out.println("2. View Booking History");
+        System.out.println("3. Change Password");
         System.out.println("0. Logout");
         
         return switch(inputReader.readInt("Enter choice: ")) {
             case 1 -> CustomerMenuOption.SEARCH_MOVIE;
             case 2 -> CustomerMenuOption.VIEW_BOOKING_HISTORY;
+            case 3 -> CustomerMenuOption.CHANGE_PASSWORD;
             case 0 -> CustomerMenuOption.LOGOUT;
             default -> CustomerMenuOption.INVALID;
         };
@@ -63,6 +67,14 @@ public class ConsoleCustomerView {
             displayBookHistory(bookings);
             handleBookingSelection(bookings);
         }
+    }
+    
+    private void handleChangePassword() {
+        ConsoleAuthInputUtil authInputReader = new ConsoleAuthInputUtil();
+        String newPassword = authInputReader.getPassword();
+        
+        customerController.changePassword(newPassword);
+        System.out.println("Password Changed.");
     }
 
     private void handleLogout() {

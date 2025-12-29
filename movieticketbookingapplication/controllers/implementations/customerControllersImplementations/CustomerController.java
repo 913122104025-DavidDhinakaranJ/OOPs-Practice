@@ -16,4 +16,9 @@ public class CustomerController implements ICustomerController {
     public List<Booking> getBookingHistory() {
         return customer.getBookings();
     }
+
+    @Override
+    public void changePassword(String newPassword) {
+        customer.setPassword(newPassword);
+    }
 }

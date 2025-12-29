@@ -5,7 +5,7 @@ import com.mycompany.movieticketbookingapplication.enums.Role;
 
 public abstract class User implements AuthenticatableUser {    
     private final String username;
-    private final String password;
+    private String password;
     private final String userId;
     private final Role role;
     private boolean isBlocked;
@@ -26,6 +26,10 @@ public abstract class User implements AuthenticatableUser {
     @Override
     public boolean validatePassword(String enteredPassword) {
         return this.password.equals(enteredPassword);
+    }
+    
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
     }
     
     public String getUserId() {

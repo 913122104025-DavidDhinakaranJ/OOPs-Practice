@@ -4,7 +4,6 @@ import com.mycompany.movieticketbookingapplication.controllers.interfaces.adminC
 import com.mycompany.movieticketbookingapplication.enums.Privilege;
 import com.mycompany.movieticketbookingapplication.models.users.Admin;
 import com.mycompany.movieticketbookingapplication.repositories.IUserRepository;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 

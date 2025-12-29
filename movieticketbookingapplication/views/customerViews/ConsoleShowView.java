@@ -74,6 +74,10 @@ public class ConsoleShowView {
     }
 
     private void handleBookShow() {
+        if(showController.isShowStarted()) {
+            System.out.println("This show has already started. Unable to book ticket.");
+            return;
+        }
         SessionContext sessionContext = appContext.getSessionContext();
         Customer customer = (Customer) sessionContext.getCurrentUser().orElse(null);
 

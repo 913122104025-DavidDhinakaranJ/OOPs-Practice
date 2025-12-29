@@ -9,6 +9,8 @@ import java.util.List;
 public interface IShowController {
     Show getShow();
     
+    boolean isShowStarted();
+    
     List<ShowSeat> getAvailableSeats();
         
     Booking createBooking(Customer customer, List<ShowSeat> showSeats);

@@ -1,0 +1,1 @@
+package com.mycompany.bankapplication4.enums;public enum CardType {    CREDIT,    DEBIT,    INVALID}

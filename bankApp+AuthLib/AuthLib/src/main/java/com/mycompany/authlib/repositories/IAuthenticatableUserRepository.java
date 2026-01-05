@@ -1,0 +1,1 @@
+package com.mycompany.authlib.repositories;import com.mycompany.authlib.users.AuthenticatableUser;public interface IAuthenticatableUserRepository {    void saveUser(AuthenticatableUser user);    AuthenticatableUser findUser(String username);    boolean isUsernameTaken(String username);}

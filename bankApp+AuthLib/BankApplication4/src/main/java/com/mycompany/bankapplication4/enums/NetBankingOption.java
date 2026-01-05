@@ -1,0 +1,1 @@
+package com.mycompany.bankapplication4.enums;public enum NetBankingOption {    LIST_ACCOUNTS,    CREATE_ACCOUNT,    ISSUE_CARD,    TRANSFER_FUND,    LOGOUT,    INVALID}

@@ -1,1 +1,0 @@
-package com.mycompany.bankapplication4.repositories;import com.mycompany.bankapplication4.models.accounts.BankAccount;import java.util.List;public interface IAccountRepository {    void saveAccount(BankAccount account);    BankAccount findAccount(String accNo);    List<BankAccount> findAccountsByUserId(String userId);}

@@ -1,1 +1,0 @@
-package com.mycompany.bankapplication4;import com.mycompany.bankapplication4.views.ConsoleMainView;import com.mycompany.bankapplication4.views.IMainView;public class BankApplication4 {    public static void main(String[] args) {        IMainView mainView = new ConsoleMainView();        mainView.runMainView();    }}

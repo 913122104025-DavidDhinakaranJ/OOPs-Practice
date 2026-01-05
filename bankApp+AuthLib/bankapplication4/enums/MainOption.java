@@ -1,1 +1,0 @@
-package com.mycompany.bankapplication4.enums;public enum MainOption {    REGISTER,    LOGIN,    CARD,    EXIT,    INVALID}

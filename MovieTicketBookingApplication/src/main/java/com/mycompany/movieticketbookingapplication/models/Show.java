@@ -1,0 +1,80 @@
+package com.mycompany.movieticketbookingapplication.models;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+public class Show {
+    private static final AtomicLong idCounter = new AtomicLong(10000);
+    
+    private final String showId;
+    private final Movie movie;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private final Theatre theatre;
+    private final CinemaHall cinemaHall;
+    private final List<ShowSeat> showSeats;
+    private final double basePrice;
+    
+    public Show(Movie movie, CinemaHall cinemaHall, Theatre theatre, double basePrice) {
+        this.showId = "SHOW" + idCounter.incrementAndGet();
+        this.movie = movie;
+        this.cinemaHall = cinemaHall;
+        this.theatre = theatre;
+        this.basePrice = basePrice;
+        
+        this.showSeats = new ArrayList<>();
+        cinemaHall.getSeats().forEach(seat -> {
+            showSeats.add(new ShowSeat(this.showId + seat.getSeatId(), seat, this));
+        });
+    }
+
+    public String getShowId() {
+        return showId;
+    }
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+    
+    public Theatre getTheatre() {
+        return theatre;
+    }
+
+    public CinemaHall getCinemaHall() {
+        return cinemaHall;
+    }
+
+    public List<ShowSeat> getAvailableSeats() {
+        List<ShowSeat> availableSeats = new ArrayList<>();
+        
+        for(ShowSeat seat : showSeats) {
+            if(seat.isAvailable()) {
+                availableSeats.add(seat);
+            }
+        }
+        
+        return availableSeats;
+    }
+    
+    public double getPrice() {
+        return basePrice;
+    }
+}
